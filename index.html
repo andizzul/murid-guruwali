@@ -41,12 +41,12 @@
             border-bottom: 2px solid #ddd;
         }
         
-        /* Memastikan gambar kop terlihat besar di seluler */
+        /* Memastikan gambar kop terlihat besar di desktop */
         .header-kop img {
             width: 100%; 
             max-width: 100%;
             height: auto;
-            border-radius: 8px;
+            border-radius: 8px; /* Sudut melengkung di desktop */
             opacity: 0.95;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
@@ -283,11 +283,18 @@
             /* KUNCI PERUBAHAN: Atur padding minimal pada container */
             .card-container {
                 border-radius: 0; 
-                padding: 11px; /* DIUBAH MENJADI 11px */
+                padding: 11px; 
                 box-shadow: none; 
                 max-width: 100%;
                 width: 100%;
             }
+            
+            /* KUNCI PERUBAHAN: Penyesuaian Kop Sekolah */
+            .header-kop img {
+                border-radius: 0; /* Hilangkan sudut melengkung agar gambar terkesan lebih besar */
+                /* Anda bisa mengatur margin-bottom agar tidak terlalu jauh dengan judul */
+            }
+
 
             .data-table tr { 
                 margin-bottom: 5px; 

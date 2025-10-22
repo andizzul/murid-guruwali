@@ -195,7 +195,7 @@
             display: flex; 
             align-items: stretch; 
             margin-bottom: 5px; 
-            gap: 5px; /* Jarak antar kolom */
+            gap: 5px; 
             width: 100%;
         }
         
@@ -221,7 +221,7 @@
         }
 
         .header-content {
-            background-color: #eaf3ff; /* Warna Judul: Biru Muda */
+            background-color: #eaf3ff; 
             color: #2c3e50;
             padding: 15px; 
             display: flex; 
@@ -234,7 +234,7 @@
         }
         
         .data-content {
-            background-color: #f5f5f5; /* Warna Data Default: Abu-abu Muda */
+            background-color: #f5f5f5; 
             padding: 15px 20px 15px 15px; 
             height: 100%; 
             box-sizing: border-box;
@@ -243,7 +243,7 @@
         }
 
         .data-content.data-content-filled {
-            background-color: #fffae0; /* Warna Data Terisi: Kuning Muda */
+            background-color: #fffae0; 
         }
         
         /* Gaya Teks */
@@ -260,7 +260,7 @@
 
 
         /* ====================================
-           PENYESUAIAN MOBILE (HP)
+           PENYESUAIAN MOBILE (HP) - LOCKED
            ==================================== */
         @media (max-width: 768px) {
             body {
@@ -270,7 +270,8 @@
             
             .card-container {
                 border-radius: 0; 
-                padding: 11px; 
+                /* KUNCI PERBAIKAN: Mengurangi padding horizontal untuk memperbesar visual kop */
+                padding: 11px 5px; 
                 box-shadow: none; 
                 max-width: 100%;
                 width: 100%;
@@ -280,14 +281,14 @@
                 font-size: 1.1em; 
             }
 
-            /* KUNCI PERBAIKAN 1: Kembalikan Font Size Pesan Keterangan ke 0.8em */
+            /* LOCKED: Font Size Pesan Keterangan 0.8em */
             #message {
                 font-size: 0.8em; 
                 font-weight: normal; 
                 text-align: center; 
             }
 
-            /* KUNCI PERBAIKAN 2: Kerapihan Kolom */
+            /* LOCKED: Kerapihan Kolom (Judul 28%, Data 72%) */
             .data-table th {
                 flex-basis: 28%; 
                 width: 28%; 
@@ -299,31 +300,36 @@
                 font-size: 0.9em; 
             }
 
-            /* Ukuran Font Judul dipertahankan (0.85em) */
+            /* LOCKED: Ukuran Font Judul 0.85em */
             .header-content {
                 font-size: 0.85em; 
                 justify-content: flex-start; 
             }
             
-            /* Rata Kiri Wajib untuk Teks Judul (dipertahankan) */
+            /* LOCKED: Rata Kiri Wajib untuk Teks Judul */
             .header-content span {
                 text-align: left !important;
                 display: block; 
             }
             
-            /* Rata Kiri Semua Data (dipertahankan) */
+            /* Rata Kiri Semua Data */
             .highlighted-name,
             .highlighted-wali,
             .data-content {
                 text-align: left !important;
             }
 
-            /* Menghilangkan ikon di tampilan mobile (dipertahankan) */
+            /* Menghilangkan ikon di tampilan mobile */
             .header-content i {
                 display: none; 
             }
+            
+            /* KUNCI PERBAIKAN: Menghilangkan border-radius pada gambar agar terlihat lebih lebar (telah ada sebelumnya, memastikan tidak berubah) */
+            .header-kop img {
+                border-radius: 0; 
+            }
 
-            /* Kunci Spinner: Posisi dipertahankan, tidak diubah */
+            /* LOCKED: Posisi Spinner dipertahankan */
             #fullLoadingOverlay {
                 border-radius: 0; 
                 top: 0;
@@ -334,19 +340,16 @@
                 transform: translateY(-20vh) rotate(0deg); 
             }
             
-            /* KUNCI PERBAIKAN 3: Warna dan Padding Kolom */
+            /* LOCKED: Warna dan Padding Kolom */
             .header-content {
-                 /* Pastikan warna latar belakang tetap biru muda (diambil dari desktop) */
                 background-color: #eaf3ff; 
-                padding: 10px; /* Padding HP dipertahankan */
+                padding: 10px; 
             }
             .data-content {
-                /* Warna latar belakang data default (diambil dari desktop) */
                 background-color: #f5f5f5;
-                padding: 10px; /* Padding HP dipertahankan */
+                padding: 10px; 
             }
             .data-content.data-content-filled {
-                /* Warna latar belakang data terisi (diambil dari desktop) */
                 background-color: #fffae0; 
             }
         }

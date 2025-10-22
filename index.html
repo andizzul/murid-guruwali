@@ -90,8 +90,9 @@
         }
         
         .nis-input {
-            width: 130px; 
-            max-width: 130px; 
+            /* Perbaikan/Final: Melebarkan input NIS untuk desktop */
+            width: 150px; 
+            max-width: 150px; 
             padding: 8px 10px; 
             border: 2px solid #ccc;
             border-radius: 8px 0 0 8px; 
@@ -270,7 +271,7 @@
             
             .card-container {
                 border-radius: 0; 
-                /* KUNCI PERBAIKAN: Mengurangi padding horizontal untuk memperbesar visual kop */
+                /* Padding disesuaikan untuk memperbesar visual kop (5px horizontal) */
                 padding: 11px 5px; 
                 box-shadow: none; 
                 max-width: 100%;
@@ -324,7 +325,7 @@
                 display: none; 
             }
             
-            /* KUNCI PERBAIKAN: Menghilangkan border-radius pada gambar agar terlihat lebih lebar (telah ada sebelumnya, memastikan tidak berubah) */
+            /* LOCKED: Border-radius gambar 0 untuk mobile */
             .header-kop img {
                 border-radius: 0; 
             }
@@ -568,4 +569,3 @@
 
 </body>
 </html>
-

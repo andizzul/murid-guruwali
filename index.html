@@ -41,9 +41,9 @@
             border-bottom: 2px solid #ddd;
         }
         
-        /* PERBAIKAN 2: Memastikan gambar kop terlihat besar di seluler */
+        /* Memastikan gambar kop terlihat besar di seluler */
         .header-kop img {
-            width: 100%; /* KUNCI: Membuat lebar gambar 100% dari kontainer card */
+            width: 100%; 
             max-width: 100%;
             height: auto;
             border-radius: 8px;
@@ -258,22 +258,33 @@
             font-size: 1em;
         }
 
-        /* PERBAIKAN 1: Responsivitas Dihapus atau Dinonaktifkan */
+        /* Perbaikan Responsivitas Mobile */
         @media (max-width: 768px) {
             .card-container {
-                padding: 15px; /* Kurangi padding card di mobile */
+                padding: 15px; 
             }
             .data-table tr { 
-                /* Hapus flex-direction: column; agar tetap 2 kolom */
-                /* Ganti margin-bottom agar sesuai */
                 margin-bottom: 5px; 
             }
-            .data-table th, .data-table td { 
-                /* Pertahankan flex-basis dan width seperti desktop */
-                flex-basis: 40%;
-                flex-basis: 60%; 
+            
+            /* KUNCI: Perkecil ukuran font pada kolom (TH dan TD) */
+            .data-table th, .data-table td {
+                font-size: 0.9em; /* Mengurangi ukuran font */
             }
-            .header-content, .data-content { padding: 10px; }
+            
+            .data-table th { 
+                flex-basis: 40%;
+            }
+            .data-table td { 
+                flex-basis: 60%;
+            }
+            .header-content, .data-content { 
+                padding: 10px; /* Mengurangi padding juga membantu */
+            }
+            /* Menyesuaikan kembali nama yang highlight agar tetap rapi */
+            .highlighted-name {
+                font-size: 1em !important; 
+            }
         }
     </style>
 </head>
@@ -343,8 +354,9 @@
 
 <script>
     // =========================================================================
-    // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET - TIDAK BERUBAH)
+    // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET - DIKEMBALIKAN KE KONDISI TERUJI)
     // =========================================================================
+    // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
     const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZbCe3vY6WGK_Dnhe3ghY'; 
     const SHEET_NAME = 'guru_wali'; 
     
@@ -432,6 +444,7 @@
                     const row = jsonData.table.rows[0];
                     
                     const student = {
+                        // Kolom: B (0), C (1), D (2), E (3), F (4), G (5), H (6)
                         nisn: row.c[0] ? row.c[0].v : '-',
                         namaLengkap: row.c[1] ? row.c[1].v : '-',
                         kelas: row.c[2] ? row.c[2].v : '-',

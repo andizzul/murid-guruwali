@@ -171,9 +171,9 @@
             
             border-radius: 0 0 16px 16px; 
             height: 70%; 
-            margin: 0 45px; /* Desktop padding */
+            margin: 0 45px; 
 
-            padding-top: 10%; 
+            padding-top: 10%; /* Posisi Spinner di Desktop */
         }
         
         #dataLoadingSpinner {
@@ -235,8 +235,8 @@
             height: 100%; 
             box-sizing: border-box;
             font-weight: 600;
-            justify-content: flex-start; /* Default Desktop: Rata Kiri */
-            font-size: 1em; /* Default Desktop */
+            justify-content: flex-start; 
+            font-size: 1em; 
         }
         
         .header-content i {
@@ -274,11 +274,13 @@
             font-weight: 800 !important; 
             text-transform: none; 
             letter-spacing: normal;
+            text-align: left; /* Default Desktop */
         }
 
         .highlighted-wali {
             font-weight: 500 !important; 
             font-size: 1em;
+            text-align: left; /* Default Desktop */
         }
 
         /* ====================================
@@ -298,51 +300,58 @@
                 width: 100%;
             }
             
-            /* KUNCI PERBAIKAN 1: Ukuran Font Judul H2 */
             h2 {
-                font-size: 1.1em; /* Diperkecil lagi */
+                font-size: 1.1em; 
             }
 
-            /* KUNCI PERBAIKAN 2: Pengaturan #message di HP */
             #message {
-                font-size: 0.8em; /* Diperkecil lagi */
+                font-size: 0.8em; 
                 font-weight: normal; 
-                text-align: center; /* Tetap rata tengah */
+                text-align: center; 
             }
 
-            /* KUNCI PERBAIKAN 3 & 4: Kolom Judul (TH) */
-            .header-content {
-                font-size: 0.8em; /* Diperkecil lagi */
-                justify-content: flex-start; /* KRITIS: Pastikan Rata Kiri */
+            /* KUNCI PERBAIKAN 2: Kurangi lebar kolom judul (35% -> 30%) */
+            .data-table th {
+                font-size: 0.8em; 
+                flex-basis: 30%; 
+                width: 30%; 
             }
             
-            /* Menghilangkan ikon di tampilan mobile (Pengaturan yang sudah benar) */
+            /* Sisa lebar dialokasikan untuk kolom data (65% -> 70%) */
+            .data-table td {
+                font-size: 0.9em; 
+                flex-basis: 70%; 
+                width: 70%;
+            }
+
+            /* KUNCI PERBAIKAN 1: Rata Kiri Nama Lengkap (dan semua data) */
+            .highlighted-name,
+            .highlighted-wali,
+            .data-content {
+                text-align: left !important;
+            }
+
+            /* Kolom Judul */
+            .header-content {
+                justify-content: flex-start; 
+                font-size: 0.8em; 
+            }
+            
+            /* Menghilangkan ikon di tampilan mobile */
             .header-content i {
                 display: none; 
             }
 
-            /* Penyesuaian Overlay HP */
+            /* KUNCI PERBAIKAN 3: Angkat Posisi Spinner */
             #dataLoadingOverlay {
                 margin: 0 11px; 
-                top: 40%; 
-                height: 60%; 
-                padding-top: 10%; 
+                top: 35%; /* Diangkat dari 40% menjadi 35% */
+                height: 65%; /* Disesuaikan */
+                padding-top: 5%; /* Dikurangi dari 10% menjadi 5% untuk menaikkan spinner*/
             }
             
-            /* Penyesuaian Kop Sekolah */
             .header-kop img {
                 border-radius: 0; 
-            }
-
-            .data-table th {
-                flex-basis: 35%; 
-                width: 35%; 
-            }
-            
-            .data-table td {
-                font-size: 0.9em; 
-                flex-basis: 65%; 
-                width: 65%;
             }
             
             .header-content, .data-content { 
@@ -500,7 +509,7 @@
         }
 
         messageDiv.innerText = ""; 
-        setButtonLoading(true); // Mulai loading 
+        setButtonLoading(true); 
         
         const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq=${query}&sheet=${SHEET_NAME}&headers=1`;
@@ -510,7 +519,6 @@
             .then(data => {
                 const jsonData = extractJsonFromResponse(data);
                 
-                // Tambahkan timeout untuk menampilkan hasil setelah 2 detik
                 setTimeout(() => {
                     if (jsonData && jsonData.table && jsonData.table.rows && jsonData.table.rows.length > 0) {
                         const row = jsonData.table.rows[0];

@@ -57,7 +57,7 @@
             margin-bottom: 15px; 
             padding-bottom: 15px;
             position: relative;
-            font-size: 1.8em;
+            font-size: 1.8em; /* Default Desktop */
             font-weight: 700;
         }
 
@@ -281,6 +281,11 @@
                 margin-bottom: 5px; 
             }
             
+            /* KUNCI PERUBAHAN: Ukuran Font Judul H2 */
+            h2 {
+                font-size: 1.4em; /* DIKECILKAN dari 1.8em agar terlihat normal di HP */
+            }
+
             /* Pengaturan #message di HP */
             #message {
                 font-size: 0.8em; 
@@ -292,17 +297,17 @@
                 text-align: left;
             }
             
-            /* KUNCI PERUBAHAN: Lebar Kolom Judul (TH) & Ukuran Font */
+            /* Lebar Kolom Judul (TH) & Ukuran Font */
             .data-table th {
-                font-size: 0.8em; /* DIKECILKAN dari 0.85em menjadi 0.8em */
-                flex-basis: 35%; /* DIPERSEMPIT dari 40% menjadi 35% */
+                font-size: 0.8em; 
+                flex-basis: 35%; 
                 width: 35%; 
             }
             
-            /* KUNCI PERUBAHAN: Lebar Kolom Data Hasil (TD) */
+            /* Lebar Kolom Data Hasil (TD) */
             .data-table td {
                 font-size: 0.9em; 
-                flex-basis: 65%; /* DIPERLUAS dari 60% menjadi 65% */
+                flex-basis: 65%; 
                 width: 65%;
             }
             

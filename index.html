@@ -9,7 +9,7 @@
     
     <style>
         /* ====================================
-           GAYA UMUM & TATA LETAK (Tampilan Desktop Kunci)
+           GAYA UMUM & TATA LETAK (Desktop Default)
            ==================================== */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -57,7 +57,7 @@
             margin-bottom: 15px; 
             padding-bottom: 15px;
             position: relative;
-            font-size: 1.8em; /* Default Desktop */
+            font-size: 1.8em; 
             font-weight: 700;
         }
 
@@ -140,9 +140,7 @@
             background-color: #367ac8; 
         }
 
-        /* ====================================
-           PESAN STATUS (Desktop Default)
-           ==================================== */
+        /* PESAN STATUS */
         #message {
             text-align: center;
             color: #e74c3c; 
@@ -151,9 +149,7 @@
             min-height: 1.2em; 
         }
 
-        /* ====================================
-           OVERLAY LOADING KHUSUS AREA DATA 
-           ==================================== */
+        /* OVERLAY LOADING KHUSUS AREA DATA */
         #dataLoadingOverlay {
             display: none; 
             position: absolute; 
@@ -173,7 +169,7 @@
             height: 70%; 
             margin: 0 45px; 
 
-            padding-top: 10%; /* Posisi Spinner di Desktop */
+            padding-top: 10%; 
         }
         
         #dataLoadingSpinner {
@@ -187,9 +183,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ====================================
-           PENGATURAN TABEL 
-           ==================================== */
+        /* PENGATURAN TABEL */
         .data-table {
             width: 100%;
             border-collapse: collapse; 
@@ -246,12 +240,6 @@
             flex-shrink: 0; 
         }
         
-        .header-content span {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-        
         /* Kolom Data Hasil (TD) */
         .data-content {
             background-color: #f5f5f5; 
@@ -259,8 +247,7 @@
             height: 100%; 
             box-sizing: border-box;
             font-weight: 500;
-            opacity: 1; 
-            transition: background-color 0.5s ease-in-out; 
+            text-align: left; /* Penting untuk data */
         }
 
         .data-content.data-content-filled {
@@ -272,16 +259,13 @@
             font-size: clamp(0.8em, 4vw, 1.25em); 
             color: #2c3e50; 
             font-weight: 800 !important; 
-            text-transform: none; 
-            letter-spacing: normal;
-            text-align: left; /* Default Desktop */
         }
 
         .highlighted-wali {
             font-weight: 500 !important; 
             font-size: 1em;
-            text-align: left; /* Default Desktop */
         }
+
 
         /* ====================================
            PERBAIKAN RESPONSIVITAS MOBILE (HP)
@@ -310,31 +294,31 @@
                 text-align: center; 
             }
 
-            /* KUNCI PERBAIKAN 2: Kurangi lebar kolom judul (35% -> 30%) */
+            /* KUNCI PERBAIKAN 2: Kurangi lebar kolom judul (30% -> 28%) */
             .data-table th {
-                font-size: 0.8em; 
-                flex-basis: 30%; 
-                width: 30%; 
+                /* Lebar kolom judul */
+                flex-basis: 28%; 
+                width: 28%; 
             }
             
-            /* Sisa lebar dialokasikan untuk kolom data (65% -> 70%) */
+            /* KUNCI PERBAIKAN: Sisa lebar dialokasikan untuk kolom data (70% -> 72%) */
             .data-table td {
+                flex-basis: 72%; 
+                width: 72%;
                 font-size: 0.9em; 
-                flex-basis: 70%; 
-                width: 70%;
             }
 
-            /* KUNCI PERBAIKAN 1: Rata Kiri Nama Lengkap (dan semua data) */
+            /* KUNCI PERBAIKAN 1: Naikkan Ukuran Font Judul (0.8em -> 0.9em) */
+            .header-content {
+                font-size: 0.9em; 
+                justify-content: flex-start; 
+            }
+            
+            /* Rata Kiri Semua Data */
             .highlighted-name,
             .highlighted-wali,
             .data-content {
                 text-align: left !important;
-            }
-
-            /* Kolom Judul */
-            .header-content {
-                justify-content: flex-start; 
-                font-size: 0.8em; 
             }
             
             /* Menghilangkan ikon di tampilan mobile */
@@ -342,12 +326,12 @@
                 display: none; 
             }
 
-            /* KUNCI PERBAIKAN 3: Angkat Posisi Spinner */
+            /* KUNCI PERBAIKAN 3: Angkat Posisi Spinner (Center di layar HP) */
             #dataLoadingOverlay {
                 margin: 0 11px; 
-                top: 35%; /* Diangkat dari 40% menjadi 35% */
-                height: 65%; /* Disesuaikan */
-                padding-top: 5%; /* Dikurangi dari 10% menjadi 5% untuk menaikkan spinner*/
+                top: 25%; /* Diangkat dari 35% menjadi 25% */
+                height: 75%; /* Disesuaikan */
+                padding-top: 0; /* Padding vertikal dihilangkan agar center */
             }
             
             .header-kop img {

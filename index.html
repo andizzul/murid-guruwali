@@ -149,7 +149,7 @@
             min-height: 1.2em; 
         }
 
-        /* OVERLAY LOADING KHUSUS AREA DATA */
+        /* OVERLAY LOADING KHUSUS AREA DATA (Desktop) */
         #dataLoadingOverlay {
             display: none; 
             position: absolute; 
@@ -183,7 +183,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* PENGATURAN TABEL */
+        /* PENGATURAN TABEL (Desktop) */
         .data-table {
             width: 100%;
             border-collapse: collapse; 
@@ -247,7 +247,7 @@
             height: 100%; 
             box-sizing: border-box;
             font-weight: 500;
-            text-align: left; /* Penting untuk data */
+            text-align: left; 
         }
 
         .data-content.data-content-filled {
@@ -268,7 +268,7 @@
 
 
         /* ====================================
-           PERBAIKAN RESPONSIVITAS MOBILE (HP)
+           PENYESUAIAN MOBILE (HP)
            ==================================== */
         @media (max-width: 768px) {
             body {
@@ -294,24 +294,23 @@
                 text-align: center; 
             }
 
-            /* KUNCI PERBAIKAN 2: Kurangi lebar kolom judul (30% -> 28%) */
+            /* KUNCI PERBAIKAN 2: Pertahankan lebar kolom judul (28%) */
             .data-table th {
-                /* Lebar kolom judul */
                 flex-basis: 28%; 
                 width: 28%; 
             }
             
-            /* KUNCI PERBAIKAN: Sisa lebar dialokasikan untuk kolom data (70% -> 72%) */
+            /* Pertahankan lebar kolom data (72%) */
             .data-table td {
                 flex-basis: 72%; 
                 width: 72%;
                 font-size: 0.9em; 
             }
 
-            /* KUNCI PERBAIKAN 1: Naikkan Ukuran Font Judul (0.8em -> 0.9em) */
+            /* KUNCI PERBAIKAN 1 & 3: Ukuran Font Judul 0.85em dan Rata Kiri */
             .header-content {
-                font-size: 0.9em; 
-                justify-content: flex-start; 
+                font-size: 0.85em; /* Diubah dari 0.9em menjadi 0.85em */
+                justify-content: flex-start; /* Rata Kiri Teks Judul */
             }
             
             /* Rata Kiri Semua Data */
@@ -326,12 +325,13 @@
                 display: none; 
             }
 
-            /* KUNCI PERBAIKAN 3: Angkat Posisi Spinner (Center di layar HP) */
+            /* KUNCI PERBAIKAN 4: Naikkan Posisi Spinner (Center Vertikal) */
+            /* Mengangkat `top` dari 25% menjadi 15% */
             #dataLoadingOverlay {
                 margin: 0 11px; 
-                top: 25%; /* Diangkat dari 35% menjadi 25% */
-                height: 75%; /* Disesuaikan */
-                padding-top: 0; /* Padding vertikal dihilangkan agar center */
+                top: 15%; /* Diangkat 2 kali dari posisi sebelumnya (25%) */
+                height: 85%; /* Disesuaikan */
+                padding-top: 0; 
             }
             
             .header-kop img {

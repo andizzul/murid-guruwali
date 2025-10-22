@@ -75,7 +75,7 @@
 
         /* CONTAINER PENCARIAN */
         .search-container {
-            margin: 5px 0 25px 0;
+            margin: 5px 0 0 0; /* Kurangi margin bawah */
             text-align: center;
             display: flex;
             justify-content: center;
@@ -162,6 +162,18 @@
             z-index: 20;
         }
         
+        /* ====================================
+           PESAN STATUS (BARU/DIKEMBALIKAN)
+           ==================================== */
+        #message {
+            text-align: center;
+            color: #e74c3c; /* Warna Merah untuk Error/Not Found */
+            font-weight: 600;
+            margin: 10px 0 15px 0;
+            min-height: 1.2em; /* Mempertahankan ruang agar layout tidak loncat */
+        }
+
+
         /* ====================================
            PENGATURAN TABEL KRITIS (FLEXBOX UNTUK KETINGGIAN & CELAH)
            ==================================== */
@@ -259,7 +271,7 @@
         }
 
         /* ====================================
-           PERBAIKAN RESPONSIVITAS MOBILE (Hanya diubah untuk HP)
+           PERBAIKAN RESPONSIVITAS MOBILE (HP)
            ==================================== */
         @media (max-width: 768px) {
             .card-container {
@@ -328,6 +340,8 @@
         </div>
     </div>
 
+    <div id="message"></div>
+
     <div id="dataResult">
         <table class="data-table">
             <tr>
@@ -368,16 +382,17 @@
 
 <script>
     // =========================================================================
-    // KODE JAVASCRIPT (DISESUAIKAN UNTUK MENGHAPUS REFERENSI KE #message)
+    // KODE JAVASCRIPT (DISEUSAIKAN UNTUK PESAN)
     // =========================================================================
+    // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
     const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZbCe3vY6WGK_Dnhe3ghY'; 
     const SHEET_NAME = 'guru_wali'; 
     
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
-    // const messageDiv = document.getElementById('message'); // Dihapus
-    
+    const messageDiv = document.getElementById('message'); // DIKEMBALIKAN
     const loadingSpinner = document.getElementById('loadingSpinner'); 
+    
     const DISPLAY_DELAY_MS = 2000; 
 
     function resetDisplay() {
@@ -410,8 +425,6 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         resetDisplay();
-        // Karena tidak ada pesan awal, ini bisa dihapus atau di-log
-        console.log("Masukkan NIS untuk mencari data.");
         
         searchButton.addEventListener('click', function() {
             resetDisplay(); 
@@ -426,21 +439,21 @@
             }
         });
         
-        // Menghapus logika yang menulis ke messageDiv saat input
         nisInput.addEventListener('input', () => {
              resetDisplay(); 
+             messageDiv.innerText = ""; // Bersihkan pesan saat user mulai mengetik
         });
     });
 
     function searchData() {
         const nis = nisInput.value.trim();
         if (nis.length === 0) {
-            // Memberikan feedback error melalui console log
-            console.error("Kolom NIS tidak boleh kosong.");
+            messageDiv.innerText = "Kolom NIS tidak boleh kosong.";
             setButtonLoading(false); 
             return;
         }
 
+        messageDiv.innerText = ""; // Kosongkan pesan sebelum proses pencarian
         setButtonLoading(true); 
         
         const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
@@ -468,18 +481,21 @@
                     setTimeout(() => {
                         setButtonLoading(false); 
                         displayStudentData(student);
+                        messageDiv.innerText = ""; // Bersihkan pesan jika berhasil
                         console.log("Data ditemukan dari Google Sheet.");
                     }, DISPLAY_DELAY_MS);
                     
                 } else {
                     setTimeout(() => {
                         setButtonLoading(false); 
+                        messageDiv.innerText = "Data tidak ditemukan."; // Pesan yang diminta
                         console.warn("Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.");
                     }, DISPLAY_DELAY_MS);
                 }
             })
             .catch(error => {
                 setButtonLoading(false); 
+                messageDiv.innerText = "Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik."; // Pesan error koneksi
                 console.error("Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik. Error:", error);
             });
     }

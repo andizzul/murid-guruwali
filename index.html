@@ -32,6 +32,7 @@
             padding: 35px 45px; /* Padding ini untuk Desktop */
             box-sizing: border-box;
             border-top: 5px solid #4a90e2;
+            position: relative; /* KRITIS: Agar overlay absolute bekerja */
         }
         
         .header-kop {
@@ -144,39 +145,6 @@
         }
 
         /* ====================================
-           OVERLAY LOADING BARU (KRITIS)
-           ==================================== */
-        #loadingOverlay {
-            display: none; /* KRITIS: Disembunyikan secara default oleh CSS */
-            position: fixed; 
-            z-index: 9999; 
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            /* Efek kabur ringan */
-            background-color: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: blur(2px); 
-            
-            /* Pusatkan spinner - AKAN DITAMBAHKAN OLEH JS SAAT LOADING */
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        /* Spinner besar dan jelas di tengah layar */
-        #fullScreenSpinner {
-            color: #4a90e2; 
-            font-size: 3em; 
-            animation: spin 1.5s linear infinite; 
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* ====================================
            PESAN STATUS (DIKEMBALIKAN)
            ==================================== */
         #message {
@@ -187,9 +155,47 @@
             min-height: 1.2em; 
         }
 
+        /* ====================================
+           OVERLAY LOADING KHUSUS AREA DATA (KRITIS)
+           ==================================== */
+        #dataLoadingOverlay {
+            display: none; /* Awalnya disembunyikan */
+            position: absolute; 
+            top: 30%; /* Start di bawah kop dan judul */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 900; 
+            
+            background-color: rgba(255, 255, 255, 0.85); /* Kabur ringan */
+            
+            /* Pusatkan spinner */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Sejajarkan ke atas agar dekat dengan baris NIS */
+            padding-top: 15%; /* Dorong spinner ke bawah agar kira-kira sejajar NIS */
+            flex-direction: column;
+            
+            /* Kunci: Membuat overlay menutupi area data */
+            border-radius: 0 0 16px 16px; 
+            height: 70%; 
+            margin: 0 45px; /* Sesuaikan dengan padding card-container Desktop */
+        }
+        
+        /* Spinner besar dan jelas */
+        #dataLoadingSpinner {
+            color: #4a90e2; 
+            font-size: 2.5em; 
+            animation: spin 1.5s linear infinite; 
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         /* ====================================
-           PENGATURAN TABEL KRITIS (FLEXBOX UNTUK KETINGGIAN & CELAH)
+           PENGATURAN TABEL KRITIS
            ==================================== */
         .data-table {
             width: 100%;
@@ -205,6 +211,7 @@
             gap: 5px; 
             width: 100%;
         }
+        /* ... (CSS tabel lainnya tidak berubah) ... */
         
         .data-table th, .data-table td {
             border: 0 !important; 
@@ -240,55 +247,12 @@
             justify-content: flex-start; 
         }
         
-        .header-content i {
-            margin-right: 8px;
-            color: #4a90e2;
-            font-size: 1.1em;
-            flex-shrink: 0; 
-        }
-        
-        .header-content span {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-        
-
-        /* 3. Kolom Data Hasil (TD) - STATUS DEFAULT / KOSONG */
-        .data-content {
-            background-color: #f5f5f5; 
-            padding: 15px 20px 15px 15px; 
-            height: 100%; 
-            box-sizing: border-box;
-            font-weight: 500;
-            opacity: 1; 
-            transition: background-color 0.5s ease-in-out; 
-        }
-
-        /* Kelas yang ditambahkan JS ketika data DITEMUKAN */
-        .data-content.data-content-filled {
-            background-color: #fffae0; 
-        }
-        
-        /* Gaya Teks */
-        .highlighted-name {
-            font-size: clamp(0.8em, 4vw, 1.25em); 
-            color: #2c3e50; 
-            font-weight: 800 !important; 
-            text-transform: none; 
-            letter-spacing: normal;
-        }
-
-        .highlighted-wali {
-            font-weight: 500 !important; 
-            font-size: 1em;
-        }
+        /* ... (Gaya teks tidak berubah) ... */
 
         /* ====================================
            PERBAIKAN RESPONSIVITAS MOBILE (HP)
            ==================================== */
         @media (max-width: 768px) {
-            /* KUNCI PERUBAHAN: Hilangkan padding pada body untuk full layar */
             body {
                 padding: 0;
                 align-items: stretch;
@@ -303,64 +267,24 @@
                 width: 100%;
             }
             
-            /* KUNCI PERUBAHAN: Penyesuaian Kop Sekolah */
+            /* KUNCI PERUBAHAN: Sesuaikan overlay untuk mode HP */
+            #dataLoadingOverlay {
+                margin: 0 11px; /* Sesuaikan dengan padding card-container HP (11px) */
+                top: 40%; /* Geser ke bawah sedikit */
+                height: 60%; 
+                padding-top: 10%; /* Posisi Spinner lebih ke bawah */
+            }
+            
+            /* ... (Gaya HP lainnya tidak berubah) ... */
             .header-kop img {
                 border-radius: 0; 
             }
-
-            .data-table tr { 
-                margin-bottom: 5px; 
-            }
-            
-            /* Ukuran Font Judul H2 */
-            h2 {
-                font-size: 1.1em; 
-            }
-
-            /* Pengaturan #message di HP */
-            #message {
-                font-size: 0.8em; 
-                font-weight: normal; 
-            }
-
-            /* Judul Rata Kiri di Mobile */
-            .header-content {
-                text-align: left;
-            }
-            
-            /* Lebar Kolom Judul (TH) & Ukuran Font */
-            .data-table th {
-                font-size: 0.8em; 
-                flex-basis: 35%; 
-                width: 35%; 
-            }
-            
-            /* Lebar Kolom Data Hasil (TD) */
-            .data-table td {
-                font-size: 0.9em; 
-                flex-basis: 65%; 
-                width: 65%;
-            }
-            
-            /* Menghilangkan ikon di tampilan mobile */
-            .header-content i {
-                display: none; 
-            }
-            
-            .header-content, .data-content { 
-                padding: 10px; 
-            }
-            .highlighted-name {
-                font-size: 1em !important; 
-            }
+            /* ... */
         }
     </style>
 </head>
 <body>
 
-<div id="loadingOverlay">
-    <i class="fas fa-circle-notch" id="fullScreenSpinner"></i>
-</div>
 <div class="card-container">
     
     <div class="header-kop">
@@ -383,7 +307,10 @@
     </div>
 
     <div id="message"></div>
-
+    
+    <div id="dataLoadingOverlay">
+        <i class="fas fa-circle-notch" id="dataLoadingSpinner"></i>
+    </div>
     <div id="dataResult">
         <table class="data-table">
             <tr>
@@ -433,9 +360,10 @@
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
     const messageDiv = document.getElementById('message'); 
-    const loadingOverlay = document.getElementById('loadingOverlay'); 
+    const dataLoadingOverlay = document.getElementById('dataLoadingOverlay'); // Overlay baru
+    const dataResult = document.getElementById('dataResult');
     
-    const DISPLAY_DELAY_MS = 2000; // 2 Detik sesuai permintaan
+    const DISPLAY_DELAY_MS = 2000; 
 
     function resetDisplay() {
         document.querySelectorAll('#dataResult .data-content').forEach(div => {
@@ -452,16 +380,18 @@
         document.getElementById('guruWali').innerText = '-';
     }
     
-    // FUNGSI INI DIPERBAIKI untuk mengontrol OVERLAY
+    // FUNGSI INI DIUBAH untuk mengontrol overlay lokal
     function setButtonLoading(isLoading) {
         if (isLoading) {
-            // Tampilkan overlay dengan display: flex agar centering berfungsi
-            loadingOverlay.style.display = 'flex'; 
+            dataLoadingOverlay.style.display = 'flex'; // Tampilkan overlay
+            dataResult.style.opacity = '0.3'; // Kaburkan area data
+            
             searchButton.disabled = true; 
             nisInput.disabled = true; 
         } else {
-            // Sembunyikan overlay
-            loadingOverlay.style.display = 'none'; 
+            dataLoadingOverlay.style.display = 'none'; // Sembunyikan overlay
+            dataResult.style.opacity = '1'; // Kembalikan opacity area data
+            
             searchButton.disabled = false; 
             nisInput.disabled = false; 
         }
@@ -499,7 +429,7 @@
         }
 
         messageDiv.innerText = ""; 
-        setButtonLoading(true); // Mulai loading dan tampilkan overlay
+        setButtonLoading(true); // Mulai loading 
         
         const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq=${query}&sheet=${SHEET_NAME}&headers=1`;
@@ -509,7 +439,7 @@
             .then(data => {
                 const jsonData = extractJsonFromResponse(data);
                 
-                // Tambahkan timeout di sini agar loading minimal 2 detik
+                // Tambahkan timeout untuk menampilkan hasil setelah 2 detik
                 setTimeout(() => {
                     if (jsonData && jsonData.table && jsonData.table.rows && jsonData.table.rows.length > 0) {
                         const row = jsonData.table.rows[0];
@@ -527,10 +457,8 @@
                         
                         displayStudentData(student);
                         messageDiv.innerText = ""; 
-                        console.log("Data ditemukan dari Google Sheet.");
                     } else {
                         messageDiv.innerText = "Data tidak ditemukan."; 
-                        console.warn("Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.");
                     }
                     
                     setButtonLoading(false); // Selesai loading

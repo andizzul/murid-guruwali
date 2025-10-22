@@ -15,7 +15,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #eef1f6;
             margin: 0;
-            padding: 30px;
+            padding: 30px; /* Padding ini untuk Desktop */
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -29,7 +29,7 @@
             background-color: #ffffff;
             border-radius: 16px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            padding: 35px 45px;
+            padding: 35px 45px; /* Padding ini untuk Desktop */
             box-sizing: border-box;
             border-top: 5px solid #4a90e2;
         }
@@ -274,16 +274,29 @@
            PERBAIKAN RESPONSIVITAS MOBILE (HP)
            ==================================== */
         @media (max-width: 768px) {
-            .card-container {
-                padding: 15px; 
+            /* KUNCI PERUBAHAN: Hilangkan padding pada body untuk full layar */
+            body {
+                padding: 0;
+                /* Memastikan card-container bisa menempel ke atas/bawah */
+                align-items: stretch;
             }
+            
+            /* KUNCI PERUBAHAN: Atur padding minimal pada container */
+            .card-container {
+                border-radius: 0; /* Hilangkan sudut melengkung agar benar-benar menempel */
+                padding: 10px; /* Jarak minimal agar konten tidak menempel ke tepi layar */
+                box-shadow: none; /* Hilangkan bayangan agar terlihat seperti bagian dari halaman */
+                max-width: 100%;
+                width: 100%;
+            }
+
             .data-table tr { 
                 margin-bottom: 5px; 
             }
             
-            /* KUNCI PERUBAHAN: Ukuran Font Judul H2 */
+            /* Ukuran Font Judul H2 */
             h2 {
-                font-size: 1.1em; /* DIUBAH MENJADI 1.1em agar sangat ringkas di HP */
+                font-size: 1.1em; 
             }
 
             /* Pengaturan #message di HP */

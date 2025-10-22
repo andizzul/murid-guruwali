@@ -143,23 +143,44 @@
             background-color: #367ac8; 
         }
 
-        /* Menyembunyikan teks "Cari" saat loading */
+        /* Menyembunyikan teks "Cari" saat loading (Tetap dipertahankan, jaga-jaga) */
         .search-button.loading .search-text {
             visibility: hidden;
             opacity: 0;
         }
-
-        /* SPINNER DI DALAM TOMBOL (Pusat Sempurna) */
-        #loadingSpinner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); 
+        
+        /* ====================================
+           OVERLAY LOADING BARU (KRITIS)
+           ==================================== */
+        #loadingOverlay {
+            display: none; /* Awalnya disembunyikan */
+            position: fixed; /* Selalu di atas konten */
+            z-index: 9999; /* Pastikan di atas semua elemen lain */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            /* Efek kabur ringan */
+            background-color: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(2px); /* Efek kabur pada background */
             
-            color: white; 
-            font-size: 1.1em;
-            display: none; 
-            z-index: 20;
+            /* Pusatkan spinner */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Spinner besar dan jelas di tengah layar */
+        #fullScreenSpinner {
+            color: #4a90e2; /* Warna biru yang menonjol */
+            font-size: 3em; /* Ukuran yang diperbesar */
+            animation: spin 1.5s linear infinite; /* Animasi berputar */
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         /* ====================================
@@ -292,7 +313,6 @@
             /* KUNCI PERUBAHAN: Penyesuaian Kop Sekolah */
             .header-kop img {
                 border-radius: 0; /* Hilangkan sudut melengkung agar gambar terkesan lebih besar */
-                /* Anda bisa mengatur margin-bottom agar tidak terlalu jauh dengan judul */
             }
 
 
@@ -346,6 +366,9 @@
 </head>
 <body>
 
+<div id="loadingOverlay">
+    <i class="fas fa-circle-notch" id="fullScreenSpinner"></i>
+    </div>
 <div class="card-container">
     
     <div class="header-kop">
@@ -362,7 +385,6 @@
                    aria-label="Cari data murid berdasarkan NIS">
             
             <button id="searchButton" class="search-button">
-                <i class="fas fa-circle-notch fa-spin" id="loadingSpinner"></i>
                 <span class="search-text">Cari</span> 
             </button>
         </div>
@@ -419,7 +441,8 @@
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
     const messageDiv = document.getElementById('message'); 
-    const loadingSpinner = document.getElementById('loadingSpinner'); 
+    // Mengambil elemen overlay baru
+    const loadingOverlay = document.getElementById('loadingOverlay'); 
     
     const DISPLAY_DELAY_MS = 2000; 
 
@@ -438,15 +461,18 @@
         document.getElementById('guruWali').innerText = '-';
     }
     
+    // FUNGSI INI DIMODIFIKASI untuk mengontrol OVERLAY
     function setButtonLoading(isLoading) {
         if (isLoading) {
-            searchButton.classList.add('loading'); 
-            loadingSpinner.style.display = 'block'; 
+            // Tampilkan overlay dan nonaktifkan tombol
+            loadingOverlay.style.display = 'flex'; 
             searchButton.disabled = true; 
+            nisInput.disabled = true; 
         } else {
-            searchButton.classList.remove('loading'); 
-            loadingSpinner.style.display = 'none'; 
+            // Sembunyikan overlay dan aktifkan tombol
+            loadingOverlay.style.display = 'none'; 
             searchButton.disabled = false; 
+            nisInput.disabled = false; 
         }
     }
 
@@ -482,7 +508,7 @@
         }
 
         messageDiv.innerText = ""; 
-        setButtonLoading(true); 
+        setButtonLoading(true); // Mulai loading dan tampilkan overlay
         
         const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq=${query}&sheet=${SHEET_NAME}&headers=1`;
@@ -507,7 +533,7 @@
                     };
                     
                     setTimeout(() => {
-                        setButtonLoading(false); 
+                        setButtonLoading(false); // Selesai loading
                         displayStudentData(student);
                         messageDiv.innerText = ""; 
                         console.log("Data ditemukan dari Google Sheet.");
@@ -515,14 +541,14 @@
                     
                 } else {
                     setTimeout(() => {
-                        setButtonLoading(false); 
+                        setButtonLoading(false); // Selesai loading
                         messageDiv.innerText = "Data tidak ditemukan."; 
                         console.warn("Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.");
                     }, DISPLAY_DELAY_MS);
                 }
             })
             .catch(error => {
-                setButtonLoading(false); 
+                setButtonLoading(false); // Selesai loading
                 messageDiv.innerText = "Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik."; 
                 console.error("Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik. Error:", error);
             });

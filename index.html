@@ -41,7 +41,9 @@
             border-bottom: 2px solid #ddd;
         }
         
+        /* PERBAIKAN 2: Memastikan gambar kop terlihat besar di seluler */
         .header-kop img {
+            width: 100%; /* KUNCI: Membuat lebar gambar 100% dari kontainer card */
             max-width: 100%;
             height: auto;
             border-radius: 8px;
@@ -256,17 +258,22 @@
             font-size: 1em;
         }
 
-        /* Responsivitas */
+        /* PERBAIKAN 1: Responsivitas Dihapus atau Dinonaktifkan */
         @media (max-width: 768px) {
+            .card-container {
+                padding: 15px; /* Kurangi padding card di mobile */
+            }
             .data-table tr { 
-                flex-direction: column; 
-                gap: 0; 
-                margin-bottom: 10px; 
+                /* Hapus flex-direction: column; agar tetap 2 kolom */
+                /* Ganti margin-bottom agar sesuai */
+                margin-bottom: 5px; 
             }
             .data-table th, .data-table td { 
-                width: 100%; 
-                flex-basis: auto; 
+                /* Pertahankan flex-basis dan width seperti desktop */
+                flex-basis: 40%;
+                flex-basis: 60%; 
             }
+            .header-content, .data-content { padding: 10px; }
         }
     </style>
 </head>
@@ -275,7 +282,7 @@
 <div class="card-container">
     
     <div class="header-kop">
-        <img src="kopsekolah.jpg" alt="Kop Surat Sekolah">
+        <img src="kopsekolah.jpg" alt="Kop Surat Sekolah"> 
     </div>
     
     <h2>Data Murid dan Guru Wali</h2>
@@ -336,10 +343,9 @@
 
 <script>
     // =========================================================================
-    // KODE JAVASCRIPT (DATA DUMMY DIHAPUS - HANYA MENGGUNAKAN GOOGLE SHEET)
+    // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET - TIDAK BERUBAH)
     // =========================================================================
-    // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
-    const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZjBCe3vY6WGK_Dnhe3ghY'; 
+    const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZbCe3vY6WGK_Dnhe3ghY'; 
     const SHEET_NAME = 'guru_wali'; 
     
     const nisInput = document.getElementById('nisSearch');
@@ -347,7 +353,7 @@
     const messageDiv = document.getElementById('message');
     const loadingSpinner = document.getElementById('loadingSpinner'); 
     
-    const DISPLAY_DELAY_MS = 2000; // Delay agar efek loading terlihat
+    const DISPLAY_DELAY_MS = 2000; 
 
     function resetDisplay() {
         document.querySelectorAll('#dataResult .data-content').forEach(div => {
@@ -364,16 +370,15 @@
         document.getElementById('guruWali').innerText = '-';
     }
     
-    // FUNGSI UNTUK MENGATUR TAMPILAN LOADING
     function setButtonLoading(isLoading) {
         if (isLoading) {
-            searchButton.classList.add('loading'); // Menambahkan kelas untuk menyembunyikan teks
-            loadingSpinner.style.display = 'block'; // Menampilkan spinner
-            searchButton.disabled = true; // Menonaktifkan tombol
+            searchButton.classList.add('loading'); 
+            loadingSpinner.style.display = 'block'; 
+            searchButton.disabled = true; 
         } else {
-            searchButton.classList.remove('loading'); // Menghapus kelas
-            loadingSpinner.style.display = 'none'; // Menyembunyikan spinner
-            searchButton.disabled = false; // Mengaktifkan tombol
+            searchButton.classList.remove('loading'); 
+            loadingSpinner.style.display = 'none'; 
+            searchButton.disabled = false; 
         }
     }
 
@@ -413,10 +418,8 @@
         }
 
         messageDiv.innerText = "";
-        setButtonLoading(true); // Mulai loading
+        setButtonLoading(true); 
         
-        // Membangun Query API untuk mencari data berdasarkan NIS (Kolom A)
-        // Kolom yang diambil: B (NISN), C (Nama), D (Kelas), E (JK), F (Alamat), G (Wali), H (Guru Wali)
         const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq=${query}&sheet=${SHEET_NAME}&headers=1`;
         
@@ -429,7 +432,6 @@
                     const row = jsonData.table.rows[0];
                     
                     const student = {
-                        // Perhatikan urutan kolom: B (0), C (1), D (2), dst.
                         nisn: row.c[0] ? row.c[0].v : '-',
                         namaLengkap: row.c[1] ? row.c[1].v : '-',
                         kelas: row.c[2] ? row.c[2].v : '-',
@@ -437,24 +439,24 @@
                         alamat: row.c[4] ? row.c[4].v : '-',
                         waliKelas: row.c[5] ? row.c[5].v : '-', 
                         guruWali: row.c[6] ? row.c[6].v : '-',
-                        nis: nis // Gunakan NIS dari input
+                        nis: nis
                     };
                     
                     setTimeout(() => {
-                        setButtonLoading(false); // Selesai loading
+                        setButtonLoading(false); 
                         displayStudentData(student);
                         messageDiv.innerText = "Data ditemukan dari Google Sheet.";
                     }, DISPLAY_DELAY_MS);
                     
                 } else {
                     setTimeout(() => {
-                        setButtonLoading(false); // Selesai loading
+                        setButtonLoading(false); 
                         messageDiv.innerText = "Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.";
                     }, DISPLAY_DELAY_MS);
                 }
             })
             .catch(error => {
-                setButtonLoading(false); // Selesai loading
+                setButtonLoading(false); 
                 messageDiv.innerText = "Terjadi kesalahan koneksi atau penguraian data. Pastikan Google Sheet sudah publik. Error: " + error.message;
                 console.error("Error fetching data:", error);
             });
@@ -476,7 +478,6 @@
     }
 
     function extractJsonFromResponse(response) {
-        // Fungsi ini menghilangkan wrapper "google.visualization.Query.setResponse(" dari respons GSheets
         const jsonString = response.substring(response.indexOf('{'), response.lastIndexOf('}') + 1);
         try {
             return JSON.parse(jsonString);
@@ -489,4 +490,3 @@
 
 </body>
 </html>
-

@@ -32,7 +32,7 @@
             padding: 35px 45px; 
             box-sizing: border-box;
             border-top: 5px solid #4a90e2;
-            position: relative; /* KUNCI: Untuk memposisikan overlay */
+            position: relative; 
         }
         
         .header-kop {
@@ -140,7 +140,7 @@
             background-color: #367ac8; 
         }
 
-        /* PESAN STATUS */
+        /* PESAN STATUS (Default Desktop) */
         #message {
             text-align: center;
             color: #e74c3c; 
@@ -149,9 +149,7 @@
             min-height: 1.2em; 
         }
 
-        /* ====================================
-           OVERLAY LOADING BARU (Mencakup seluruh Card)
-           ==================================== */
+        /* OVERLAY LOADING BARU (Mencakup seluruh Card) */
         #fullLoadingOverlay {
             display: none; 
             position: absolute; 
@@ -159,18 +157,16 @@
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: 999; /* Pastikan di atas semua elemen */
+            z-index: 999; 
             
-            /* KUNCI PERBAIKAN: Background dengan opacity rendah (0.55) */
             background-color: rgba(255, 255, 255, 0.55); 
             
             justify-content: center;
             align-items: center; 
             flex-direction: column;
             
-            border-radius: 16px; /* Sesuai radius card */
+            border-radius: 16px; 
             
-            /* Menambahkan efek blur pada konten di belakangnya (Khusus Loading) */
             backdrop-filter: blur(4px); 
             -webkit-backdrop-filter: blur(4px);
         }
@@ -195,7 +191,23 @@
             margin-top: 20px;
         }
 
+        .data-table tr {
+            display: flex; 
+            align-items: stretch; 
+            margin-bottom: 5px; 
+            gap: 5px; /* Jarak antar kolom */
+            width: 100%;
+        }
+        
         /* Gaya Kolom Judul dan Data (Desktop Default) */
+        .data-table th, .data-table td {
+            border: 0 !important; 
+            padding: 0; 
+            flex-grow: 1; 
+            box-sizing: border-box;
+            height: auto; 
+        }
+
         .data-table th {
             width: 40%; 
             flex-basis: 40%;
@@ -209,7 +221,7 @@
         }
 
         .header-content {
-            background-color: #eaf3ff; 
+            background-color: #eaf3ff; /* Warna Judul: Biru Muda */
             color: #2c3e50;
             padding: 15px; 
             display: flex; 
@@ -222,13 +234,30 @@
         }
         
         .data-content {
-            background-color: #f5f5f5; 
+            background-color: #f5f5f5; /* Warna Data Default: Abu-abu Muda */
             padding: 15px 20px 15px 15px; 
             height: 100%; 
             box-sizing: border-box;
             font-weight: 500;
             text-align: left; 
         }
+
+        .data-content.data-content-filled {
+            background-color: #fffae0; /* Warna Data Terisi: Kuning Muda */
+        }
+        
+        /* Gaya Teks */
+        .highlighted-name {
+            font-size: clamp(0.8em, 4vw, 1.25em); 
+            color: #2c3e50; 
+            font-weight: 800 !important; 
+        }
+
+        .highlighted-wali {
+            font-weight: 500 !important; 
+            font-size: 1em;
+        }
+
 
         /* ====================================
            PENYESUAIAN MOBILE (HP)
@@ -251,7 +280,14 @@
                 font-size: 1.1em; 
             }
 
-            /* Lebar kolom dipertahankan dari perbaikan terakhir */
+            /* KUNCI PERBAIKAN 1: Kembalikan Font Size Pesan Keterangan ke 0.8em */
+            #message {
+                font-size: 0.8em; 
+                font-weight: normal; 
+                text-align: center; 
+            }
+
+            /* KUNCI PERBAIKAN 2: Kerapihan Kolom */
             .data-table th {
                 flex-basis: 28%; 
                 width: 28%; 
@@ -263,48 +299,55 @@
                 font-size: 0.9em; 
             }
 
-            /* Ukuran Font Judul 0.85em */
+            /* Ukuran Font Judul dipertahankan (0.85em) */
             .header-content {
                 font-size: 0.85em; 
                 justify-content: flex-start; 
             }
             
-            /* KUNCI RATA KIRI: Memastikan teks di kolom judul rata kiri */
+            /* Rata Kiri Wajib untuk Teks Judul (dipertahankan) */
             .header-content span {
                 text-align: left !important;
                 display: block; 
             }
             
-            /* Rata Kiri Semua Data */
+            /* Rata Kiri Semua Data (dipertahankan) */
             .highlighted-name,
             .highlighted-wali,
             .data-content {
                 text-align: left !important;
             }
 
-            /* Menghilangkan ikon di tampilan mobile */
+            /* Menghilangkan ikon di tampilan mobile (dipertahankan) */
             .header-content i {
                 display: none; 
             }
 
-            /* KUNCI PERBAIKAN 1 & 2: Full Screen Overlay dan Opacity */
+            /* Kunci Spinner: Posisi dipertahankan, tidak diubah */
             #fullLoadingOverlay {
-                border-radius: 0; /* Menghilangkan radius di HP */
+                border-radius: 0; 
                 top: 0;
                 height: 100%; 
-                /* Background opacity sudah diatur di atas menjadi 0.55 */
             }
             
-            /* KUNCI PERBAIKAN 3: Menaikkan Posisi Spinner (Center Vertikal) */
-            /* Kita akan menggeser spinner ke atas agar benar-benar terlihat di tengah */
             #dataLoadingSpinner {
-                 /* Menggeser spinner ke atas */
                 transform: translateY(-20vh) rotate(0deg); 
             }
-
-             /* Pastikan elemen yang berisi data tidak diubah opacitinya */
-            #dataResult {
-                opacity: 1 !important; 
+            
+            /* KUNCI PERBAIKAN 3: Warna dan Padding Kolom */
+            .header-content {
+                 /* Pastikan warna latar belakang tetap biru muda (diambil dari desktop) */
+                background-color: #eaf3ff; 
+                padding: 10px; /* Padding HP dipertahankan */
+            }
+            .data-content {
+                /* Warna latar belakang data default (diambil dari desktop) */
+                background-color: #f5f5f5;
+                padding: 10px; /* Padding HP dipertahankan */
+            }
+            .data-content.data-content-filled {
+                /* Warna latar belakang data terisi (diambil dari desktop) */
+                background-color: #fffae0; 
             }
         }
     </style>
@@ -387,7 +430,7 @@
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
     const messageDiv = document.getElementById('message'); 
-    const fullLoadingOverlay = document.getElementById('fullLoadingOverlay'); // Menggunakan overlay baru
+    const fullLoadingOverlay = document.getElementById('fullLoadingOverlay'); 
     const dataResult = document.getElementById('dataResult');
     
     const DISPLAY_DELAY_MS = 2000; 
@@ -409,15 +452,11 @@
     
     function setButtonLoading(isLoading) {
         if (isLoading) {
-            fullLoadingOverlay.style.display = 'flex'; // Tampilkan overlay penuh
-            // dataResult.style.opacity = '0.3'; <--- TIDAK DIGUNAKAN LAGI
-            
+            fullLoadingOverlay.style.display = 'flex'; 
             searchButton.disabled = true; 
             nisInput.disabled = true; 
         } else {
-            fullLoadingOverlay.style.display = 'none'; // Sembunyikan overlay penuh
-            // dataResult.style.opacity = '1'; <--- TIDAK DIGUNAKAN LAGI
-            
+            fullLoadingOverlay.style.display = 'none'; 
             searchButton.disabled = false; 
             nisInput.disabled = false; 
         }

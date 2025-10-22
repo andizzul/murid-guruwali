@@ -143,29 +143,22 @@
             background-color: #367ac8; 
         }
 
-        /* Menyembunyikan teks "Cari" saat loading (Tetap dipertahankan, jaga-jaga) */
-        .search-button.loading .search-text {
-            visibility: hidden;
-            opacity: 0;
-        }
-        
         /* ====================================
            OVERLAY LOADING BARU (KRITIS)
            ==================================== */
         #loadingOverlay {
-            display: none; /* Awalnya disembunyikan */
-            position: fixed; /* Selalu di atas konten */
-            z-index: 9999; /* Pastikan di atas semua elemen lain */
+            display: none; /* KRITIS: Disembunyikan secara default oleh CSS */
+            position: fixed; 
+            z-index: 9999; 
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             /* Efek kabur ringan */
             background-color: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: blur(2px); /* Efek kabur pada background */
+            backdrop-filter: blur(2px); 
             
-            /* Pusatkan spinner */
-            display: flex;
+            /* Pusatkan spinner - AKAN DITAMBAHKAN OLEH JS SAAT LOADING */
             justify-content: center;
             align-items: center;
             flex-direction: column;
@@ -173,9 +166,9 @@
 
         /* Spinner besar dan jelas di tengah layar */
         #fullScreenSpinner {
-            color: #4a90e2; /* Warna biru yang menonjol */
-            font-size: 3em; /* Ukuran yang diperbesar */
-            animation: spin 1.5s linear infinite; /* Animasi berputar */
+            color: #4a90e2; 
+            font-size: 3em; 
+            animation: spin 1.5s linear infinite; 
         }
         
         @keyframes spin {
@@ -312,9 +305,8 @@
             
             /* KUNCI PERUBAHAN: Penyesuaian Kop Sekolah */
             .header-kop img {
-                border-radius: 0; /* Hilangkan sudut melengkung agar gambar terkesan lebih besar */
+                border-radius: 0; 
             }
-
 
             .data-table tr { 
                 margin-bottom: 5px; 
@@ -368,7 +360,7 @@
 
 <div id="loadingOverlay">
     <i class="fas fa-circle-notch" id="fullScreenSpinner"></i>
-    </div>
+</div>
 <div class="card-container">
     
     <div class="header-kop">
@@ -441,10 +433,9 @@
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
     const messageDiv = document.getElementById('message'); 
-    // Mengambil elemen overlay baru
     const loadingOverlay = document.getElementById('loadingOverlay'); 
     
-    const DISPLAY_DELAY_MS = 2000; 
+    const DISPLAY_DELAY_MS = 2000; // 2 Detik sesuai permintaan
 
     function resetDisplay() {
         document.querySelectorAll('#dataResult .data-content').forEach(div => {
@@ -461,15 +452,15 @@
         document.getElementById('guruWali').innerText = '-';
     }
     
-    // FUNGSI INI DIMODIFIKASI untuk mengontrol OVERLAY
+    // FUNGSI INI DIPERBAIKI untuk mengontrol OVERLAY
     function setButtonLoading(isLoading) {
         if (isLoading) {
-            // Tampilkan overlay dan nonaktifkan tombol
+            // Tampilkan overlay dengan display: flex agar centering berfungsi
             loadingOverlay.style.display = 'flex'; 
             searchButton.disabled = true; 
             nisInput.disabled = true; 
         } else {
-            // Sembunyikan overlay dan aktifkan tombol
+            // Sembunyikan overlay
             loadingOverlay.style.display = 'none'; 
             searchButton.disabled = false; 
             nisInput.disabled = false; 
@@ -518,39 +509,39 @@
             .then(data => {
                 const jsonData = extractJsonFromResponse(data);
                 
-                if (jsonData && jsonData.table && jsonData.table.rows && jsonData.table.rows.length > 0) {
-                    const row = jsonData.table.rows[0];
-                    
-                    const student = {
-                        nisn: row.c[0] ? row.c[0].v : '-',
-                        namaLengkap: row.c[1] ? row.c[1].v : '-',
-                        kelas: row.c[2] ? row.c[2].v : '-',
-                        jenisKelamin: row.c[3] ? row.c[3].v : '-',
-                        alamat: row.c[4] ? row.c[4].v : '-',
-                        waliKelas: row.c[5] ? row.c[5].v : '-', 
-                        guruWali: row.c[6] ? row.c[6].v : '-',
-                        nis: nis
-                    };
-                    
-                    setTimeout(() => {
-                        setButtonLoading(false); // Selesai loading
+                // Tambahkan timeout di sini agar loading minimal 2 detik
+                setTimeout(() => {
+                    if (jsonData && jsonData.table && jsonData.table.rows && jsonData.table.rows.length > 0) {
+                        const row = jsonData.table.rows[0];
+                        
+                        const student = {
+                            nisn: row.c[0] ? row.c[0].v : '-',
+                            namaLengkap: row.c[1] ? row.c[1].v : '-',
+                            kelas: row.c[2] ? row.c[2].v : '-',
+                            jenisKelamin: row.c[3] ? row.c[3].v : '-',
+                            alamat: row.c[4] ? row.c[4].v : '-',
+                            waliKelas: row.c[5] ? row.c[5].v : '-', 
+                            guruWali: row.c[6] ? row.c[6].v : '-',
+                            nis: nis
+                        };
+                        
                         displayStudentData(student);
                         messageDiv.innerText = ""; 
                         console.log("Data ditemukan dari Google Sheet.");
-                    }, DISPLAY_DELAY_MS);
-                    
-                } else {
-                    setTimeout(() => {
-                        setButtonLoading(false); // Selesai loading
+                    } else {
                         messageDiv.innerText = "Data tidak ditemukan."; 
                         console.warn("Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.");
-                    }, DISPLAY_DELAY_MS);
-                }
+                    }
+                    
+                    setButtonLoading(false); // Selesai loading
+                }, DISPLAY_DELAY_MS);
             })
             .catch(error => {
-                setButtonLoading(false); // Selesai loading
-                messageDiv.innerText = "Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik."; 
-                console.error("Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik. Error:", error);
+                setTimeout(() => {
+                    setButtonLoading(false); // Selesai loading, bahkan jika gagal
+                    messageDiv.innerText = "Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik."; 
+                    console.error("Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik. Error:", error);
+                }, DISPLAY_DELAY_MS);
             });
     }
 

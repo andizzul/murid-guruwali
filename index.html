@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Guru Wali-Abu-Abu Kuning</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ====================================
+           GAYA UMUM & TATA LETAK
+           ==================================== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef1f6;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 650px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 35px 45px;
+            box-sizing: border-box;
+            border-top: 5px solid #4a90e2;
+        }
+        
+        .header-kop {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .header-kop img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            opacity: 0.95;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 15px; 
+            padding-bottom: 15px;
+            position: relative;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #4a90e2;
+            border-radius: 2px;
+        }
+
+        /* CONTAINER PENCARIAN */
+        .search-container {
+            margin: 5px 0 25px 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .input-group {
+            display: flex; 
+            align-items: center;
+            position: relative;
+        }
+        
+        /* INPUT LEBIH RINGKAS */
+        .nis-input {
+            width: 130px; 
+            max-width: 130px; 
+            padding: 8px 10px; 
+            border: 2px solid #ccc;
+            border-radius: 8px 0 0 8px; 
+            font-size: 1em; 
+            color: #333;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            outline: none;
+            text-align: center; 
+            height: 38px; 
+        }
+
+        /* EFEK FOCUS KEREN */
+        .nis-input:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.4); 
+            z-index: 10; 
+        }
+
+        .nis-input::placeholder {
+            color: #999; 
+            font-style: italic;
+            font-size: 0.9em;
+        }
+        
+        /* TOMBOL CARI KOTAK BIRU KECIL */
+        .search-button {
+            background-color: #4a90e2; 
+            color: white;
+            border: none;
+            padding: 8px 10px; 
+            margin-left: -2px; 
+            cursor: pointer;
+            border-radius: 0 8px 8px 0; 
+            font-size: 0.8em; 
+            font-weight: 600;
+            height: 38px; 
+            transition: background-color 0.2s;
+            box-sizing: border-box;
+            z-index: 5; 
+            
+            position: relative; 
+            overflow: hidden;
+            width: 55px; 
+        }
+
+        .search-button:hover {
+            background-color: #367ac8; 
+        }
+
+        /* Menyembunyikan teks "Cari" saat loading */
+        .search-button.loading .search-text {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        /* SPINNER DI DALAM TOMBOL (Pusat Sempurna) */
+        #loadingSpinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            
+            color: white; 
+            font-size: 1.1em;
+            display: none; 
+            z-index: 20;
+        }
+        
+        /* ====================================
+           PENGATURAN TABEL KRITIS (FLEXBOX UNTUK KETINGGIAN & CELAH)
+           ==================================== */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse; 
+            border-spacing: 0; 
+            margin-top: 20px;
+        }
+
+        .data-table tr {
+            display: flex; 
+            align-items: stretch; 
+            margin-bottom: 5px; 
+            gap: 5px; 
+            width: 100%;
+        }
+        
+        .data-table th, .data-table td {
+            border: 0 !important; 
+            padding: 0; 
+            flex-grow: 1; 
+            box-sizing: border-box;
+            height: auto; 
+        }
+        
+        /* Atur lebar kolom agar sesuai (40% : 60%) */
+        .data-table th {
+            width: 40%; 
+            flex-basis: 40%;
+            flex-shrink: 0;
+        }
+        
+        .data-table td {
+            width: 60%; 
+            flex-basis: 60%;
+            flex-shrink: 0;
+        }
+
+        /* 1. Kolom Judul (TH - Biru) */
+        .header-content {
+            background-color: #eaf3ff; 
+            color: #2c3e50;
+            padding: 15px; 
+            display: flex; 
+            align-items: center; 
+            height: 100%; 
+            box-sizing: border-box;
+            font-weight: 600;
+            justify-content: flex-start; 
+        }
+        
+        .header-content i {
+            margin-right: 8px;
+            color: #4a90e2;
+            font-size: 1.1em;
+            flex-shrink: 0; 
+        }
+        
+        .header-content span {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+
+        /* 3. Kolom Data Hasil (TD) - STATUS DEFAULT / KOSONG */
+        .data-content {
+            background-color: #f5f5f5; 
+            padding: 15px 20px 15px 15px; 
+            height: 100%; 
+            box-sizing: border-box;
+            font-weight: 500;
+            opacity: 1; 
+            transition: background-color 0.5s ease-in-out; 
+        }
+
+        /* Kelas yang ditambahkan JS ketika data DITEMUKAN */
+        .data-content.data-content-filled {
+            background-color: #fffae0; 
+        }
+        
+        /* Gaya Teks */
+        .highlighted-name {
+            font-size: clamp(0.8em, 4vw, 1.25em); 
+            color: #2c3e50; 
+            font-weight: 800 !important; 
+            text-transform: none; 
+            letter-spacing: normal;
+        }
+
+        .highlighted-wali {
+            font-weight: 500 !important; 
+            font-size: 1em;
+        }
+
+        /* Responsivitas */
+        @media (max-width: 768px) {
+            .data-table tr { 
+                flex-direction: column; 
+                gap: 0; 
+                margin-bottom: 10px; 
+            }
+            .data-table th, .data-table td { 
+                width: 100%; 
+                flex-basis: auto; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card-container">
+    
+    <div class="header-kop">
+        <img src="kopsekolah.jpg" alt="Kop Surat Sekolah">
+    </div>
+    
+    <h2>Data Murid dan Guru Wali</h2>
+    
+    <div class="search-container">
+        
+        <div class="input-group">
+            <input type="text" id="nisSearch" class="nis-input" 
+                   placeholder="Input NIS" 
+                   aria-label="Cari data murid berdasarkan NIS">
+            
+            <button id="searchButton" class="search-button">
+                <i class="fas fa-circle-notch fa-spin" id="loadingSpinner"></i>
+                <span class="search-text">Cari</span> 
+            </button>
+        </div>
+    </div>
+
+    <div id="message">Masukkan NIS (Nomor Induk Siswa) untuk menampilkan data. Pastikan Google Sheet telah terhubung dan dipublikasikan.</div>
+
+    <div id="dataResult">
+        <table class="data-table">
+            <tr>
+                <th><div class="header-content"><span><i class="fas fa-user"></i> Nama Lengkap</span></div></th>
+                <td><div id="namaLengkap" class="data-content highlighted-name">-</div></td>
+            </tr>
+            <tr>
+                <th><div class="header-content"><span><i class="fas fa-school"></i> Kelas</span></div></th>
+                <td><div id="kelas" class="data-content">-</div></td>
+            </tr>
+            <tr>
+                <th><div class="header-content"><span><i class="fas fa-id-card"></i> NIS</span></div></th>
+                <td><div id="nis" class="data-content">-</div></td>
+            </tr>
+            <tr>
+                <th><div class="header-content"><span><i class="fas fa-id-badge"></i> NISN</span></div></th>
+                <td><div id="nisn" class="data-content">-</div></td>
+            </tr>
+            <tr>
+                <th><div class="header-content"><span><i class="fas fa-venus-mars"></i> Jenis Kelamin</span></div></th>
+                <td><div id="jenisKelamin" class="data-content">-</div></td>
+            </tr>
+            <tr>
+                <th><div class="header-content"><span><i class="fas fa-map-marker-alt"></i> Alamat</span></div></th>
+                <td><div id="alamat" class="data-content">-</div></td>
+            </tr>
+            <tr>
+                <th><div class="header-content"><span><i class="fas fa-user-tie"></i> Wali Kelas</span></div></th>
+                <td><div id="waliKelas" class="data-content highlighted-wali">-</div></td>
+            </tr>
+            <tr>
+                <th><div class="header-content"><span><i class="fas fa-chalkboard-teacher"></i> Guru Wali</span></div></th>
+                <td><div id="guruWali" class="data-content highlighted-wali">-</div></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    // =========================================================================
+    // KODE JAVASCRIPT (DATA DUMMY DIHAPUS - HANYA MENGGUNAKAN GOOGLE SHEET)
+    // =========================================================================
+    // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
+    const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZbCe3vY6WGK_Dnhe3ghY'; 
+    const SHEET_NAME = 'guru_wali'; 
+    
+    const nisInput = document.getElementById('nisSearch');
+    const searchButton = document.getElementById('searchButton'); 
+    const messageDiv = document.getElementById('message');
+    const loadingSpinner = document.getElementById('loadingSpinner'); 
+    
+    const DISPLAY_DELAY_MS = 2000; // Delay agar efek loading terlihat
+
+    function resetDisplay() {
+        document.querySelectorAll('#dataResult .data-content').forEach(div => {
+            div.classList.remove('data-content-filled'); 
+        }); 
+        
+        document.getElementById('namaLengkap').innerText = '-';
+        document.getElementById('kelas').innerText = '-';
+        document.getElementById('nis').innerText = '-';
+        document.getElementById('nisn').innerText = '-';
+        document.getElementById('jenisKelamin').innerText = '-';
+        document.getElementById('alamat').innerText = '-';
+        document.getElementById('waliKelas').innerText = '-'; 
+        document.getElementById('guruWali').innerText = '-';
+    }
+    
+    // FUNGSI UNTUK MENGATUR TAMPILAN LOADING
+    function setButtonLoading(isLoading) {
+        if (isLoading) {
+            searchButton.classList.add('loading'); // Menambahkan kelas untuk menyembunyikan teks
+            loadingSpinner.style.display = 'block'; // Menampilkan spinner
+            searchButton.disabled = true; // Menonaktifkan tombol
+        } else {
+            searchButton.classList.remove('loading'); // Menghapus kelas
+            loadingSpinner.style.display = 'none'; // Menyembunyikan spinner
+            searchButton.disabled = false; // Mengaktifkan tombol
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        resetDisplay();
+        
+        searchButton.addEventListener('click', function() {
+            resetDisplay(); 
+            searchData();
+        });
+        
+        nisInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); 
+                resetDisplay(); 
+                searchData();
+            }
+        });
+        
+        nisInput.addEventListener('input', () => {
+             resetDisplay(); 
+             if (nisInput.value.trim().length > 0) {
+                 messageDiv.innerText = "Tekan ENTER atau klik tombol CARI untuk memproses data.";
+             } else {
+                 messageDiv.innerText = "Masukkan NIS (Nomor Induk Siswa) untuk menampilkan data. Pastikan Google Sheet telah terhubung dan dipublikasikan.";
+             }
+        });
+    });
+
+    function searchData() {
+        const nis = nisInput.value.trim();
+        if (nis.length === 0) {
+            messageDiv.innerText = "Kolom NIS tidak boleh kosong.";
+            setButtonLoading(false); 
+            return;
+        }
+
+        messageDiv.innerText = "";
+        setButtonLoading(true); // Mulai loading
+        
+        // Membangun Query API untuk mencari data berdasarkan NIS (Kolom A)
+        // Kolom yang diambil: B (NISN), C (Nama), D (Kelas), E (JK), F (Alamat), G (Wali), H (Guru Wali)
+        const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq=${query}&sheet=${SHEET_NAME}&headers=1`;
+        
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                const jsonData = extractJsonFromResponse(data);
+                
+                if (jsonData && jsonData.table && jsonData.table.rows && jsonData.table.rows.length > 0) {
+                    const row = jsonData.table.rows[0];
+                    
+                    const student = {
+                        // Perhatikan urutan kolom: B (0), C (1), D (2), dst.
+                        nisn: row.c[0] ? row.c[0].v : '-',
+                        namaLengkap: row.c[1] ? row.c[1].v : '-',
+                        kelas: row.c[2] ? row.c[2].v : '-',
+                        jenisKelamin: row.c[3] ? row.c[3].v : '-',
+                        alamat: row.c[4] ? row.c[4].v : '-',
+                        waliKelas: row.c[5] ? row.c[5].v : '-', 
+                        guruWali: row.c[6] ? row.c[6].v : '-',
+                        nis: nis // Gunakan NIS dari input
+                    };
+                    
+                    setTimeout(() => {
+                        setButtonLoading(false); // Selesai loading
+                        displayStudentData(student);
+                        messageDiv.innerText = "Data ditemukan dari Google Sheet.";
+                    }, DISPLAY_DELAY_MS);
+                    
+                } else {
+                    setTimeout(() => {
+                        setButtonLoading(false); // Selesai loading
+                        messageDiv.innerText = "Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.";
+                    }, DISPLAY_DELAY_MS);
+                }
+            })
+            .catch(error => {
+                setButtonLoading(false); // Selesai loading
+                messageDiv.innerText = "Terjadi kesalahan koneksi atau penguraian data. Pastikan Google Sheet sudah publik. Error: " + error.message;
+                console.error("Error fetching data:", error);
+            });
+    }
+
+    function displayStudentData(student) {
+        document.getElementById('namaLengkap').innerText = student.namaLengkap || '-';
+        document.getElementById('kelas').innerText = student.kelas || '-';
+        document.getElementById('nis').innerText = student.nis || '-';
+        document.getElementById('nisn').innerText = student.nisn || '-';
+        document.getElementById('jenisKelamin').innerText = student.jenisKelamin || '-';
+        document.getElementById('alamat').innerText = student.alamat || '-';
+        document.getElementById('waliKelas').innerText = student.waliKelas || '-';
+        document.getElementById('guruWali').innerText = student.guruWali || '-';
+        
+        document.querySelectorAll('#dataResult .data-content').forEach(div => {
+            div.classList.add('data-content-filled');
+        });
+    }
+
+    function extractJsonFromResponse(response) {
+        // Fungsi ini menghilangkan wrapper "google.visualization.Query.setResponse(" dari respons GSheets
+        const jsonString = response.substring(response.indexOf('{'), response.lastIndexOf('}') + 1);
+        try {
+            return JSON.parse(jsonString);
+        } catch (e) {
+            console.error("Gagal mengurai JSON:", e);
+            return null;
+        }
+    }
+</script>
+
+</body>
+</html>

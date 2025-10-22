@@ -9,7 +9,7 @@
     
     <style>
         /* ====================================
-           GAYA UMUM & TATA LETAK
+           GAYA UMUM & TATA LETAK (Tampilan Desktop Kunci)
            ==================================== */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -211,7 +211,7 @@
             height: 100%; 
             box-sizing: border-box;
             font-weight: 600;
-            justify-content: flex-start; /* Tetap rata kiri di desktop */
+            justify-content: flex-start; 
         }
         
         .header-content i {
@@ -258,7 +258,9 @@
             font-size: 1em;
         }
 
-        /* Perbaikan Responsivitas Mobile */
+        /* ====================================
+           PERBAIKAN RESPONSIVITAS MOBILE (Hanya diubah untuk HP)
+           ==================================== */
         @media (max-width: 768px) {
             .card-container {
                 padding: 15px; 
@@ -267,15 +269,14 @@
                 margin-bottom: 5px; 
             }
             
-            /* KUNCI 1: Judul Rata Kiri di Mobile */
+            /* Judul Rata Kiri di Mobile */
             .header-content {
-                /* Sudah diatur flex-start, jadi tidak perlu diubah */
                 text-align: left;
             }
             
-            /* KUNCI 2: Perkecil ukuran font pada kolom judul (TH) lebih kecil */
+            /* Perkecil ukuran font pada kolom judul (TH) lebih kecil */
             .data-table th {
-                font-size: 0.85em; /* Sedikit lebih kecil dari sebelumnya */
+                font-size: 0.85em; 
             }
             
             /* Perkecil ukuran font pada kolom data hasil (TD) */
@@ -327,8 +328,6 @@
         </div>
     </div>
 
-    <div id="message">Masukkan NIS (Nomor Induk Siswa) untuk menampilkan data. Pastikan Google Sheet telah terhubung dan dipublikasikan.</div>
-
     <div id="dataResult">
         <table class="data-table">
             <tr>
@@ -369,17 +368,16 @@
 
 <script>
     // =========================================================================
-    // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET - TIDAK BERUBAH)
+    // KODE JAVASCRIPT (DISESUAIKAN UNTUK MENGHAPUS REFERENSI KE #message)
     // =========================================================================
-    // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
     const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZbCe3vY6WGK_Dnhe3ghY'; 
     const SHEET_NAME = 'guru_wali'; 
     
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
-    const messageDiv = document.getElementById('message');
-    const loadingSpinner = document.getElementById('loadingSpinner'); 
+    // const messageDiv = document.getElementById('message'); // Dihapus
     
+    const loadingSpinner = document.getElementById('loadingSpinner'); 
     const DISPLAY_DELAY_MS = 2000; 
 
     function resetDisplay() {
@@ -412,6 +410,8 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         resetDisplay();
+        // Karena tidak ada pesan awal, ini bisa dihapus atau di-log
+        console.log("Masukkan NIS untuk mencari data.");
         
         searchButton.addEventListener('click', function() {
             resetDisplay(); 
@@ -426,25 +426,21 @@
             }
         });
         
+        // Menghapus logika yang menulis ke messageDiv saat input
         nisInput.addEventListener('input', () => {
              resetDisplay(); 
-             if (nisInput.value.trim().length > 0) {
-                 messageDiv.innerText = "Tekan ENTER atau klik tombol CARI untuk memproses data.";
-             } else {
-                 messageDiv.innerText = "Masukkan NIS (Nomor Induk Siswa) untuk menampilkan data. Pastikan Google Sheet telah terhubung dan dipublikasikan.";
-             }
         });
     });
 
     function searchData() {
         const nis = nisInput.value.trim();
         if (nis.length === 0) {
-            messageDiv.innerText = "Kolom NIS tidak boleh kosong.";
+            // Memberikan feedback error melalui console log
+            console.error("Kolom NIS tidak boleh kosong.");
             setButtonLoading(false); 
             return;
         }
 
-        messageDiv.innerText = "";
         setButtonLoading(true); 
         
         const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
@@ -459,7 +455,6 @@
                     const row = jsonData.table.rows[0];
                     
                     const student = {
-                        // Kolom: B (0), C (1), D (2), E (3), F (4), G (5), H (6)
                         nisn: row.c[0] ? row.c[0].v : '-',
                         namaLengkap: row.c[1] ? row.c[1].v : '-',
                         kelas: row.c[2] ? row.c[2].v : '-',
@@ -473,20 +468,19 @@
                     setTimeout(() => {
                         setButtonLoading(false); 
                         displayStudentData(student);
-                        messageDiv.innerText = "Data ditemukan dari Google Sheet.";
+                        console.log("Data ditemukan dari Google Sheet.");
                     }, DISPLAY_DELAY_MS);
                     
                 } else {
                     setTimeout(() => {
                         setButtonLoading(false); 
-                        messageDiv.innerText = "Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.";
+                        console.warn("Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.");
                     }, DISPLAY_DELAY_MS);
                 }
             })
             .catch(error => {
                 setButtonLoading(false); 
-                messageDiv.innerText = "Terjadi kesalahan koneksi atau penguraian data. Pastikan Google Sheet sudah publik. Error: " + error.message;
-                console.error("Error fetching data:", error);
+                console.error("Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik. Error:", error);
             });
     }
 

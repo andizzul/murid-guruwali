@@ -161,7 +161,7 @@
         #dataLoadingOverlay {
             display: none; /* Awalnya disembunyikan */
             position: absolute; 
-            top: 30%; /* Start di bawah kop dan judul */
+            top: 30%; /* Mulai di bawah header */
             left: 0;
             right: 0;
             bottom: 0;
@@ -170,16 +170,18 @@
             background-color: rgba(255, 255, 255, 0.85); /* Kabur ringan */
             
             /* Pusatkan spinner */
-            display: flex;
             justify-content: center;
-            align-items: flex-start; /* Sejajarkan ke atas agar dekat dengan baris NIS */
-            padding-top: 15%; /* Dorong spinner ke bawah agar kira-kira sejajar NIS */
+            align-items: center; 
             flex-direction: column;
             
             /* Kunci: Membuat overlay menutupi area data */
             border-radius: 0 0 16px 16px; 
             height: 70%; 
             margin: 0 45px; /* Sesuaikan dengan padding card-container Desktop */
+
+            /* Perbaikan posisi vertikal agar sejajar NIS */
+            /* Jika tabel memiliki 8 baris, NIS adalah baris ke-3. Posisi 25% vertikal dari area ini harusnya di NIS */
+            padding-top: 10%; 
         }
         
         /* Spinner besar dan jelas */
@@ -211,7 +213,6 @@
             gap: 5px; 
             width: 100%;
         }
-        /* ... (CSS tabel lainnya tidak berubah) ... */
         
         .data-table th, .data-table td {
             border: 0 !important; 
@@ -247,7 +248,48 @@
             justify-content: flex-start; 
         }
         
-        /* ... (Gaya teks tidak berubah) ... */
+        .header-content i {
+            margin-right: 8px;
+            color: #4a90e2;
+            font-size: 1.1em;
+            flex-shrink: 0; 
+        }
+        
+        .header-content span {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        /* 3. Kolom Data Hasil (TD) - STATUS DEFAULT / KOSONG */
+        .data-content {
+            background-color: #f5f5f5; 
+            padding: 15px 20px 15px 15px; 
+            height: 100%; 
+            box-sizing: border-box;
+            font-weight: 500;
+            opacity: 1; 
+            transition: background-color 0.5s ease-in-out; 
+        }
+
+        /* Kelas yang ditambahkan JS ketika data DITEMUKAN */
+        .data-content.data-content-filled {
+            background-color: #fffae0; 
+        }
+        
+        /* Gaya Teks */
+        .highlighted-name {
+            font-size: clamp(0.8em, 4vw, 1.25em); 
+            color: #2c3e50; 
+            font-weight: 800 !important; 
+            text-transform: none; 
+            letter-spacing: normal;
+        }
+
+        .highlighted-wali {
+            font-weight: 500 !important; 
+            font-size: 1em;
+        }
 
         /* ====================================
            PERBAIKAN RESPONSIVITAS MOBILE (HP)
@@ -258,7 +300,6 @@
                 align-items: stretch;
             }
             
-            /* KUNCI PERUBAHAN: Atur padding minimal pada container */
             .card-container {
                 border-radius: 0; 
                 padding: 11px; 
@@ -272,14 +313,19 @@
                 margin: 0 11px; /* Sesuaikan dengan padding card-container HP (11px) */
                 top: 40%; /* Geser ke bawah sedikit */
                 height: 60%; 
-                padding-top: 10%; /* Posisi Spinner lebih ke bawah */
+                padding-top: 10%; /* Posisi Spinner di tengah data, kira-kira sejajar NIS */
             }
             
-            /* ... (Gaya HP lainnya tidak berubah) ... */
+            /* Kunci: Icon tersembunyi di Mobile */
+            .header-content i {
+                display: none; 
+            }
+            
+            /* Kunci: Kop sekolah HP tanpa sudut */
             .header-kop img {
                 border-radius: 0; 
             }
-            /* ... */
+            /* ... (Gaya HP lainnya tidak berubah) ... */
         }
     </style>
 </head>
@@ -380,16 +426,18 @@
         document.getElementById('guruWali').innerText = '-';
     }
     
-    // FUNGSI INI DIUBAH untuk mengontrol overlay lokal
+    // FUNGSI INI SUDAH DIKUNCI DAN DIPERBAIKI
     function setButtonLoading(isLoading) {
         if (isLoading) {
-            dataLoadingOverlay.style.display = 'flex'; // Tampilkan overlay
+            // Tampilkan overlay dengan display: flex agar centering berfungsi
+            dataLoadingOverlay.style.display = 'flex'; 
             dataResult.style.opacity = '0.3'; // Kaburkan area data
             
             searchButton.disabled = true; 
             nisInput.disabled = true; 
         } else {
-            dataLoadingOverlay.style.display = 'none'; // Sembunyikan overlay
+            // Sembunyikan overlay
+            dataLoadingOverlay.style.display = 'none'; 
             dataResult.style.opacity = '1'; // Kembalikan opacity area data
             
             searchButton.disabled = false; 
@@ -461,12 +509,12 @@
                         messageDiv.innerText = "Data tidak ditemukan."; 
                     }
                     
-                    setButtonLoading(false); // Selesai loading
+                    setButtonLoading(false); // **KRITIS: Pastikan ini dipanggil**
                 }, DISPLAY_DELAY_MS);
             })
             .catch(error => {
                 setTimeout(() => {
-                    setButtonLoading(false); // Selesai loading, bahkan jika gagal
+                    setButtonLoading(false); // **KRITIS: Pastikan ini dipanggil bahkan jika gagal**
                     messageDiv.innerText = "Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik."; 
                     console.error("Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik. Error:", error);
                 }, DISPLAY_DELAY_MS);

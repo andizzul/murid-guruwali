@@ -267,9 +267,14 @@
                 margin-bottom: 5px; 
             }
             
+            /* KUNCI: Menghilangkan ikon di tampilan mobile */
+            .header-content i {
+                display: none; 
+            }
+            
             /* KUNCI: Perkecil ukuran font pada kolom (TH dan TD) */
             .data-table th, .data-table td {
-                font-size: 0.9em; /* Mengurangi ukuran font */
+                font-size: 0.9em; 
             }
             
             .data-table th { 
@@ -279,9 +284,8 @@
                 flex-basis: 60%;
             }
             .header-content, .data-content { 
-                padding: 10px; /* Mengurangi padding juga membantu */
+                padding: 10px; 
             }
-            /* Menyesuaikan kembali nama yang highlight agar tetap rapi */
             .highlighted-name {
                 font-size: 1em !important; 
             }
@@ -357,7 +361,7 @@
     // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET - DIKEMBALIKAN KE KONDISI TERUJI)
     // =========================================================================
     // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
-    const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZjBCe3vY6WGK_Dnhe3ghY'; 
+    const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZbCe3vY6WGK_Dnhe3ghY'; 
     const SHEET_NAME = 'guru_wali'; 
     
     const nisInput = document.getElementById('nisSearch');
@@ -503,4 +507,3 @@
 
 </body>
 </html>
-

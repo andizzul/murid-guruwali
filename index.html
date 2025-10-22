@@ -75,7 +75,7 @@
 
         /* CONTAINER PENCARIAN */
         .search-container {
-            margin: 5px 0 0 0; /* Kurangi margin bawah */
+            margin: 5px 0 0 0; 
             text-align: center;
             display: flex;
             justify-content: center;
@@ -163,14 +163,14 @@
         }
         
         /* ====================================
-           PESAN STATUS (BARU/DIKEMBALIKAN)
+           PESAN STATUS (DIKEMBALIKAN)
            ==================================== */
         #message {
             text-align: center;
-            color: #e74c3c; /* Warna Merah untuk Error/Not Found */
-            font-weight: 600;
+            color: #e74c3c; 
+            font-weight: 600; /* Default Desktop: Bold */
             margin: 10px 0 15px 0;
-            min-height: 1.2em; /* Mempertahankan ruang agar layout tidak loncat */
+            min-height: 1.2em; 
         }
 
 
@@ -281,6 +281,12 @@
                 margin-bottom: 5px; 
             }
             
+            /* KUNCI: Pengaturan #message di HP */
+            #message {
+                font-size: 0.8em; /* Lebih kecil dari 0.85em (judul) */
+                font-weight: normal; /* Menghapus style tebal */
+            }
+
             /* Judul Rata Kiri di Mobile */
             .header-content {
                 text-align: left;
@@ -382,7 +388,7 @@
 
 <script>
     // =========================================================================
-    // KODE JAVASCRIPT (DISEUSAIKAN UNTUK PESAN)
+    // KODE JAVASCRIPT (TIDAK BERUBAH DARI VERSI SEBELUMNYA)
     // =========================================================================
     // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
     const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZbCe3vY6WGK_Dnhe3ghY'; 
@@ -390,7 +396,7 @@
     
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
-    const messageDiv = document.getElementById('message'); // DIKEMBALIKAN
+    const messageDiv = document.getElementById('message'); 
     const loadingSpinner = document.getElementById('loadingSpinner'); 
     
     const DISPLAY_DELAY_MS = 2000; 
@@ -441,7 +447,7 @@
         
         nisInput.addEventListener('input', () => {
              resetDisplay(); 
-             messageDiv.innerText = ""; // Bersihkan pesan saat user mulai mengetik
+             messageDiv.innerText = ""; 
         });
     });
 
@@ -453,7 +459,7 @@
             return;
         }
 
-        messageDiv.innerText = ""; // Kosongkan pesan sebelum proses pencarian
+        messageDiv.innerText = ""; 
         setButtonLoading(true); 
         
         const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
@@ -481,21 +487,21 @@
                     setTimeout(() => {
                         setButtonLoading(false); 
                         displayStudentData(student);
-                        messageDiv.innerText = ""; // Bersihkan pesan jika berhasil
+                        messageDiv.innerText = ""; 
                         console.log("Data ditemukan dari Google Sheet.");
                     }, DISPLAY_DELAY_MS);
                     
                 } else {
                     setTimeout(() => {
                         setButtonLoading(false); 
-                        messageDiv.innerText = "Data tidak ditemukan."; // Pesan yang diminta
+                        messageDiv.innerText = "Data tidak ditemukan."; 
                         console.warn("Data dengan NIS " + nis + " tidak ditemukan di Google Sheet.");
                     }, DISPLAY_DELAY_MS);
                 }
             })
             .catch(error => {
                 setButtonLoading(false); 
-                messageDiv.innerText = "Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik."; // Pesan error koneksi
+                messageDiv.innerText = "Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik."; 
                 console.error("Terjadi kesalahan koneksi. Pastikan Google Sheet sudah publik. Error:", error);
             });
     }

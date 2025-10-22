@@ -32,7 +32,7 @@
             padding: 35px 45px; 
             box-sizing: border-box;
             border-top: 5px solid #4a90e2;
-            position: relative; 
+            position: relative; /* KUNCI: Untuk memposisikan overlay */
         }
         
         .header-kop {
@@ -149,33 +149,37 @@
             min-height: 1.2em; 
         }
 
-        /* OVERLAY LOADING KHUSUS AREA DATA (Desktop) */
-        #dataLoadingOverlay {
+        /* ====================================
+           OVERLAY LOADING BARU (Mencakup seluruh Card)
+           ==================================== */
+        #fullLoadingOverlay {
             display: none; 
             position: absolute; 
-            top: 30%; 
+            top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: 900; 
+            z-index: 999; /* Pastikan di atas semua elemen */
             
-            background-color: rgba(255, 255, 255, 0.85); 
+            /* KUNCI PERBAIKAN: Background dengan opacity rendah (0.55) */
+            background-color: rgba(255, 255, 255, 0.55); 
             
             justify-content: center;
             align-items: center; 
             flex-direction: column;
             
-            border-radius: 0 0 16px 16px; 
-            height: 70%; 
-            margin: 0 45px; 
-
-            padding-top: 10%; 
+            border-radius: 16px; /* Sesuai radius card */
+            
+            /* Menambahkan efek blur pada konten di belakangnya (Khusus Loading) */
+            backdrop-filter: blur(4px); 
+            -webkit-backdrop-filter: blur(4px);
         }
         
         #dataLoadingSpinner {
             color: #4a90e2; 
             font-size: 2.5em; 
             animation: spin 1.5s linear infinite; 
+            z-index: 1000;
         }
         
         @keyframes spin {
@@ -191,22 +195,7 @@
             margin-top: 20px;
         }
 
-        .data-table tr {
-            display: flex; 
-            align-items: stretch; 
-            margin-bottom: 5px; 
-            gap: 5px; 
-            width: 100%;
-        }
-        
-        .data-table th, .data-table td {
-            border: 0 !important; 
-            padding: 0; 
-            flex-grow: 1; 
-            box-sizing: border-box;
-            height: auto; 
-        }
-        
+        /* Gaya Kolom Judul dan Data (Desktop Default) */
         .data-table th {
             width: 40%; 
             flex-basis: 40%;
@@ -219,7 +208,6 @@
             flex-shrink: 0;
         }
 
-        /* Kolom Judul (TH) */
         .header-content {
             background-color: #eaf3ff; 
             color: #2c3e50;
@@ -233,14 +221,6 @@
             font-size: 1em; 
         }
         
-        .header-content i {
-            margin-right: 8px;
-            color: #4a90e2;
-            font-size: 1.1em;
-            flex-shrink: 0; 
-        }
-        
-        /* Kolom Data Hasil (TD) */
         .data-content {
             background-color: #f5f5f5; 
             padding: 15px 20px 15px 15px; 
@@ -249,23 +229,6 @@
             font-weight: 500;
             text-align: left; 
         }
-
-        .data-content.data-content-filled {
-            background-color: #fffae0; 
-        }
-        
-        /* Gaya Teks */
-        .highlighted-name {
-            font-size: clamp(0.8em, 4vw, 1.25em); 
-            color: #2c3e50; 
-            font-weight: 800 !important; 
-        }
-
-        .highlighted-wali {
-            font-weight: 500 !important; 
-            font-size: 1em;
-        }
-
 
         /* ====================================
            PENYESUAIAN MOBILE (HP)
@@ -288,13 +251,7 @@
                 font-size: 1.1em; 
             }
 
-            #message {
-                font-size: 0.8em; 
-                font-weight: normal; 
-                text-align: center; 
-            }
-
-            /* Kolom lebar dipertahankan */
+            /* Lebar kolom dipertahankan dari perbaikan terakhir */
             .data-table th {
                 flex-basis: 28%; 
                 width: 28%; 
@@ -306,14 +263,13 @@
                 font-size: 0.9em; 
             }
 
-            /* KUNCI PERBAIKAN 1: Ukuran Font Judul 0.85em */
+            /* Ukuran Font Judul 0.85em */
             .header-content {
                 font-size: 0.85em; 
                 justify-content: flex-start; 
             }
             
-            /* KUNCI PERBAIKAN 2: Rata Kiri Wajib untuk Teks Judul */
-            /* Ini memastikan teks di dalam elemen span yang memegang teks rata kiri */
+            /* KUNCI RATA KIRI: Memastikan teks di kolom judul rata kiri */
             .header-content span {
                 text-align: left !important;
                 display: block; 
@@ -325,30 +281,30 @@
             .data-content {
                 text-align: left !important;
             }
-            
+
             /* Menghilangkan ikon di tampilan mobile */
             .header-content i {
                 display: none; 
             }
 
-            /* KUNCI PERBAIKAN 3: Naikkan Posisi Spinner (Center Vertikal) */
-            /* Menaikkan `top` dari 15% menjadi 5% */
-            #dataLoadingOverlay {
-                margin: 0 11px; 
-                top: 5%; /* Diangkat 2 kali dari posisi sebelumnya (15%) */
-                height: 95%; /* Disesuaikan */
-                padding-top: 0; 
+            /* KUNCI PERBAIKAN 1 & 2: Full Screen Overlay dan Opacity */
+            #fullLoadingOverlay {
+                border-radius: 0; /* Menghilangkan radius di HP */
+                top: 0;
+                height: 100%; 
+                /* Background opacity sudah diatur di atas menjadi 0.55 */
             }
             
-            .header-kop img {
-                border-radius: 0; 
+            /* KUNCI PERBAIKAN 3: Menaikkan Posisi Spinner (Center Vertikal) */
+            /* Kita akan menggeser spinner ke atas agar benar-benar terlihat di tengah */
+            #dataLoadingSpinner {
+                 /* Menggeser spinner ke atas */
+                transform: translateY(-20vh) rotate(0deg); 
             }
-            
-            .header-content, .data-content { 
-                padding: 10px; 
-            }
-            .highlighted-name {
-                font-size: 1em !important; 
+
+             /* Pastikan elemen yang berisi data tidak diubah opacitinya */
+            #dataResult {
+                opacity: 1 !important; 
             }
         }
     </style>
@@ -356,6 +312,10 @@
 <body>
 
 <div class="card-container">
+    
+    <div id="fullLoadingOverlay">
+        <i class="fas fa-circle-notch" id="dataLoadingSpinner"></i>
+    </div>
     
     <div class="header-kop">
         <img src="kopsekolah.jpg" alt="Kop Surat Sekolah"> 
@@ -378,10 +338,6 @@
 
     <div id="message"></div>
     
-    <div id="dataLoadingOverlay">
-        <i class="fas fa-circle-notch" id="dataLoadingSpinner"></i>
-    </div>
-
     <div id="dataResult">
         <table class="data-table">
             <tr>
@@ -431,7 +387,7 @@
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
     const messageDiv = document.getElementById('message'); 
-    const dataLoadingOverlay = document.getElementById('dataLoadingOverlay'); 
+    const fullLoadingOverlay = document.getElementById('fullLoadingOverlay'); // Menggunakan overlay baru
     const dataResult = document.getElementById('dataResult');
     
     const DISPLAY_DELAY_MS = 2000; 
@@ -453,14 +409,14 @@
     
     function setButtonLoading(isLoading) {
         if (isLoading) {
-            dataLoadingOverlay.style.display = 'flex'; 
-            dataResult.style.opacity = '0.3'; 
+            fullLoadingOverlay.style.display = 'flex'; // Tampilkan overlay penuh
+            // dataResult.style.opacity = '0.3'; <--- TIDAK DIGUNAKAN LAGI
             
             searchButton.disabled = true; 
             nisInput.disabled = true; 
         } else {
-            dataLoadingOverlay.style.display = 'none'; 
-            dataResult.style.opacity = '1'; 
+            fullLoadingOverlay.style.display = 'none'; // Sembunyikan overlay penuh
+            // dataResult.style.opacity = '1'; <--- TIDAK DIGUNAKAN LAGI
             
             searchButton.disabled = false; 
             nisInput.disabled = false; 

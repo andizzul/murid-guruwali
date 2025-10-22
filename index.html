@@ -211,7 +211,7 @@
             height: 100%; 
             box-sizing: border-box;
             font-weight: 600;
-            justify-content: flex-start; 
+            justify-content: flex-start; /* Tetap rata kiri di desktop */
         }
         
         .header-content i {
@@ -267,14 +267,25 @@
                 margin-bottom: 5px; 
             }
             
-            /* KUNCI: Menghilangkan ikon di tampilan mobile */
-            .header-content i {
-                display: none; 
+            /* KUNCI 1: Judul Rata Kiri di Mobile */
+            .header-content {
+                /* Sudah diatur flex-start, jadi tidak perlu diubah */
+                text-align: left;
             }
             
-            /* KUNCI: Perkecil ukuran font pada kolom (TH dan TD) */
-            .data-table th, .data-table td {
+            /* KUNCI 2: Perkecil ukuran font pada kolom judul (TH) lebih kecil */
+            .data-table th {
+                font-size: 0.85em; /* Sedikit lebih kecil dari sebelumnya */
+            }
+            
+            /* Perkecil ukuran font pada kolom data hasil (TD) */
+            .data-table td {
                 font-size: 0.9em; 
+            }
+            
+            /* Menghilangkan ikon di tampilan mobile */
+            .header-content i {
+                display: none; 
             }
             
             .data-table th { 
@@ -358,7 +369,7 @@
 
 <script>
     // =========================================================================
-    // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET - DIKEMBALIKAN KE KONDISI TERUJI)
+    // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET - TIDAK BERUBAH)
     // =========================================================================
     // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
     const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZbCe3vY6WGK_Dnhe3ghY'; 

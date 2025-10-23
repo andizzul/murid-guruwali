@@ -90,7 +90,6 @@
         }
         
         .nis-input {
-            /* Perbaikan/Final: Melebarkan input NIS untuk desktop */
             width: 150px; 
             max-width: 150px; 
             padding: 8px 10px; 
@@ -241,6 +240,10 @@
             box-sizing: border-box;
             font-weight: 500;
             text-align: left; 
+            
+            /* CSS Umum: Tetap Flex untuk memastikan data-content mengisi tinggi cell */
+            display: flex;
+            align-items: center; 
         }
 
         .data-content.data-content-filled {
@@ -299,6 +302,12 @@
                 flex-basis: 72%; 
                 width: 72%;
                 font-size: 0.9em; 
+            }
+
+            /* PERBAIKAN VERTICAL CENTER HP: Terapkan display flex dan align-items center pada container data */
+            .data-content {
+                display: flex; /* Sudah ada di global, namun memastikan di mode HP */
+                align-items: center; /* PENTING: Perataan Vertikal */
             }
 
             /* LOCKED: Ukuran Font Judul 0.85em */
@@ -428,8 +437,8 @@
     // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET)
     // =========================================================================
     // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
-    const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZjBCe3vY6WGK_Dnhe3ghY'; 
     const SHEET_NAME = 'guru_wali'; 
+    const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZjBCe3vY6WGK_Dnhe3ghY'; 
     
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 

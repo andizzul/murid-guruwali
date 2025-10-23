@@ -15,12 +15,15 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #eef1f6;
             margin: 0;
+            /* Padding disesuaikan untuk mode mobile di media query */
             padding: 30px; 
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            justify-content: flex-start; /* Diubah: Menggeser konten ke atas */
+            align-items: center; /* Diubah: Memposisikan kartu dan footer di tengah horizontal */
             min-height: 100vh;
             box-sizing: border-box;
+            /* PERBAIKAN PENTING: Memastikan tata letak vertikal */
+            flex-direction: column; 
         }
 
         .card-container {
@@ -272,6 +275,10 @@
             font-size: 0.9em; /* Ukuran font standar desktop */
             color: #2c3e50; /* Hitam soft (dark grey) */
             line-height: 1.8; /* Jarak antar baris agar rapi */
+            
+            /* Penting: Memastikan footer tidak melebihi lebar kartu */
+            width: 100%;
+            max-width: 650px; 
         }
         
         .footer-line {
@@ -296,7 +303,8 @@
            ==================================== */
         @media (max-width: 768px) {
             body {
-                padding: 0;
+                /* Perubahan untuk mobile: menghapus padding agar konten menempel di tepi */
+                padding: 0; 
                 align-items: stretch;
             }
             
@@ -398,6 +406,8 @@
                 padding: 10px 5px;
                 font-size: 0.8em; /* Ukuran font proporsional HP */
                 line-height: 1.5;
+                /* Memastikan footer mengambil lebar penuh di HP */
+                max-width: 100%;
             }
         }
     </style>

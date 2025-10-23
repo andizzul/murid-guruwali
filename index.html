@@ -60,8 +60,11 @@
             margin-bottom: 15px; 
             padding-bottom: 15px;
             position: relative;
-            font-size: 1.8em; 
+            /* Perubahan 1: Mengurangi ukuran font (dari 1.8em) */
+            font-size: 1.6em; 
             font-weight: 700;
+            /* Perubahan 1: Merapatkan spasi antar huruf */
+            letter-spacing: -0.5px; 
         }
 
         h2::after {
@@ -95,7 +98,8 @@
         .nis-input {
             width: 150px; 
             max-width: 150px; 
-            padding: 8px 10px; 
+            /* Perubahan 2: Tambah padding kiri untuk ikon */
+            padding: 8px 10px 8px 30px; 
             border: 2px solid #ccc;
             border-radius: 8px 0 0 8px; 
             font-size: 1em; 
@@ -117,6 +121,17 @@
             color: #999; 
             font-style: italic;
             font-size: 0.9em;
+        }
+        
+        /* Perubahan 2: CSS Baru untuk Ikon Hapus (Clear Input) */
+        .clear-input-icon {
+            position: absolute;
+            left: 10px; /* Posisikan di dalam input, sedikit dari tepi kiri */
+            color: #b0b0b0;
+            font-size: 0.8em;
+            cursor: pointer;
+            z-index: 15; /* Pastikan di atas input */
+            display: none; /* Sembunyikan secara default */
         }
         
         .search-button {
@@ -146,6 +161,7 @@
         /* PESAN STATUS (Default Desktop) */
         #message {
             text-align: center;
+            /* Warna pesan peringatan */
             color: #e74c3c; 
             font-weight: 600; 
             margin: 10px 0 15px 0;
@@ -319,6 +335,8 @@
             
             h2 {
                 font-size: 1.1em; 
+                /* Perubahan 1: Merapatkan spasi di mobile juga */
+                letter-spacing: -0.3px; 
             }
 
             /* LOCKED: Font Size Pesan Keterangan 0.8em */
@@ -429,6 +447,7 @@
     <div class="search-container">
         
         <div class="input-group">
+            <i class="fas fa-times clear-input-icon" id="clearNis"></i>
             <input type="text" id="nisSearch" class="nis-input" 
                    placeholder="Input NIS" 
                    aria-label="Cari data murid berdasarkan NIS">
@@ -485,9 +504,8 @@
 </footer>
 <script>
     // =========================================================================
-    // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET)
+    // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET) - TIDAK ADA PERUBAHAN PADA FUNGSI INI
     // =========================================================================
-    // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
     const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZjBCe3vY6WGK_Dnhe3ghY'; 
     const SHEET_NAME = 'guru_wali'; 
     
@@ -496,6 +514,7 @@
     const messageDiv = document.getElementById('message'); 
     const fullLoadingOverlay = document.getElementById('fullLoadingOverlay'); 
     const dataResult = document.getElementById('dataResult');
+    const clearNisIcon = document.getElementById('clearNis'); // Elemen Ikon Hapus
     
     const DISPLAY_DELAY_MS = 2000; 
 
@@ -525,10 +544,24 @@
             nisInput.disabled = false; 
         }
     }
+    
+    // Perubahan 3: Fungsi untuk menampilkan/menyembunyikan pesan wajib diisi
+    function updateMessage() {
+        if (nisInput.value.trim().length === 0) {
+            messageDiv.innerText = "Kolom NIS tidak boleh kosong";
+            clearNisIcon.style.display = 'none'; // Perubahan 2: Sembunyikan ikon jika kosong
+        } else {
+            messageDiv.innerText = "";
+            clearNisIcon.style.display = 'flex'; // Perubahan 2: Tampilkan ikon jika terisi
+        }
+    }
 
 
     document.addEventListener('DOMContentLoaded', function() {
         resetDisplay();
+        
+        // Perubahan 3: Tampilkan pesan saat pertama kali diakses
+        updateMessage(); 
         
         searchButton.addEventListener('click', function() {
             resetDisplay(); 
@@ -545,14 +578,23 @@
         
         nisInput.addEventListener('input', () => {
              resetDisplay(); 
-             messageDiv.innerText = ""; 
+             // Perubahan 3: Perbarui pesan dan ikon setiap kali input berubah
+             updateMessage(); 
+        });
+        
+        // Perubahan 2: Event handler untuk ikon hapus
+        clearNisIcon.addEventListener('click', () => {
+            nisInput.value = ''; // Kosongkan input
+            resetDisplay(); // Reset tampilan data
+            updateMessage(); // Tampilkan pesan kosong/sembunyikan ikon
+            nisInput.focus(); // Fokus kembali ke input
         });
     });
 
     function searchData() {
         const nis = nisInput.value.trim();
         if (nis.length === 0) {
-            messageDiv.innerText = "Kolom NIS tidak boleh kosong.";
+            // Jika kosong, tampilkan pesan (sudah ditangani oleh updateMessage)
             setButtonLoading(false); 
             return;
         }
@@ -560,6 +602,7 @@
         messageDiv.innerText = ""; 
         setButtonLoading(true); 
         
+        // KODE KONEKSI GOOGLE SHEET TETAP UTUH
         const query = encodeURIComponent(`SELECT B, C, D, E, F, G, H WHERE A = '${nis}'`);
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq=${query}&sheet=${SHEET_NAME}&headers=1`;
         

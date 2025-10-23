@@ -241,7 +241,6 @@
             font-weight: 500;
             text-align: left; 
             
-            /* CSS Umum: Tetap Flex untuk memastikan data-content mengisi tinggi cell */
             display: flex;
             align-items: center; 
         }
@@ -260,6 +259,35 @@
         .highlighted-wali {
             font-weight: 500 !important; 
             font-size: 1em;
+        }
+        
+        /* ====================================
+           GAYA FOOTER BARU
+           ==================================== */
+        .page-footer {
+            /* Jarak standar/normal dari kartu konten utama */
+            margin-top: 50px; 
+            padding: 10px 10px;
+            text-align: center;
+            font-size: 0.9em; /* Ukuran font standar desktop */
+            color: #2c3e50; /* Hitam soft (dark grey) */
+            line-height: 1.8; /* Jarak antar baris agar rapi */
+        }
+        
+        .footer-line {
+            display: block; /* Memastikan setiap baris bersusun */
+        }
+
+        .footer-line a, .footer-line strong {
+            color: #2c3e50; /* Memastikan teks footer hitam */
+            font-weight: 500;
+        }
+
+        /* Pewarnaan khusus untuk 'Andizzu|L' */
+        .highlight-blue {
+            color: #4a90e2; /* Biru lembut, tidak terlalu terang */
+            font-weight: 600;
+            text-decoration: none; 
         }
 
 
@@ -304,10 +332,10 @@
                 font-size: 0.9em; 
             }
 
-            /* PERBAIKAN VERTICAL CENTER HP: Terapkan display flex dan align-items center pada container data */
+            /* PERBAIKAN VERTICAL CENTER HP */
             .data-content {
-                display: flex; /* Sudah ada di global, namun memastikan di mode HP */
-                align-items: center; /* PENTING: Perataan Vertikal */
+                display: flex; 
+                align-items: center; 
             }
 
             /* LOCKED: Ukuran Font Judul 0.85em */
@@ -361,6 +389,15 @@
             }
             .data-content.data-content-filled {
                 background-color: #fffae0; 
+            }
+            
+            /* Penyesuaian Footer di Mobile (HP) */
+            .page-footer {
+                /* Jarak proporsional di HP */
+                margin-top: 30px; 
+                padding: 10px 5px;
+                font-size: 0.8em; /* Ukuran font proporsional HP */
+                line-height: 1.5;
             }
         }
     </style>
@@ -431,14 +468,18 @@
         </table>
     </div>
 </div>
-
+<footer class="page-footer">
+    <span class="footer-line">Guru Wali - SMP Negeri 1 Bulukumba</span>
+    <span class="footer-line">Developed By : <span class="highlight-blue">Andizzu|L</span></span>
+    <span class="footer-line">2025</span>
+</footer>
 <script>
     // =========================================================================
     // KODE JAVASCRIPT (KONEKSI GOOGLE SHEET)
     // =========================================================================
     // PASTIKAN Anda GANTI ID dan NAMA SHEET ini sesuai dengan Google Sheet Anda
-    const SHEET_NAME = 'guru_wali'; 
     const SHEET_ID = '1_ldkkmwrLwZhw8UK0dWu3JZjBCe3vY6WGK_Dnhe3ghY'; 
+    const SHEET_NAME = 'guru_wali'; 
     
     const nisInput = document.getElementById('nisSearch');
     const searchButton = document.getElementById('searchButton'); 
